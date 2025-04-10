@@ -88,42 +88,44 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-2xl mx-auto"
+        className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8"
       >
-        <h1 className="text-3xl font-bold text-center mb-8">Kanada Eğitim Başvuru Formu</h1>
+        <h1 className="text-4xl font-extrabold text-center mb-10 text-gray-800">Kanada Eğitim Başvuru Formu</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <Label htmlFor="firstName">Ad</Label>
+              <Label htmlFor="firstName" className="text-lg font-semibold">Ad</Label>
               <Input
                 id="firstName"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
             <div>
-              <Label htmlFor="lastName">Soyad</Label>
+              <Label htmlFor="lastName" className="text-lg font-semibold">Soyad</Label>
               <Input
                 id="lastName"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <Label htmlFor="email">E-posta</Label>
+              <Label htmlFor="email" className="text-lg font-semibold">E-posta</Label>
               <Input
                 id="email"
                 name="email"
@@ -131,10 +133,11 @@ export default function ApplyPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
             <div>
-              <Label htmlFor="phone">Telefon</Label>
+              <Label htmlFor="phone" className="text-lg font-semibold">Telefon</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -142,12 +145,13 @@ export default function ApplyPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="birthDate">Doğum Tarihi</Label>
+            <Label htmlFor="birthDate" className="text-lg font-semibold">Doğum Tarihi</Label>
             <Input
               id="birthDate"
               name="birthDate"
@@ -155,49 +159,54 @@ export default function ApplyPage() {
               value={formData.birthDate}
               onChange={handleChange}
               required
+              className="mt-2 p-3 border border-gray-300 rounded-md w-full"
             />
           </div>
 
           <div>
-            <Label htmlFor="address">Adres</Label>
+            <Label htmlFor="address" className="text-lg font-semibold">Adres</Label>
             <Textarea
               id="address"
               name="address"
               value={formData.address}
               onChange={handleChange}
               required
+              className="mt-2 p-3 border border-gray-300 rounded-md w-full"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <Label htmlFor="city">Şehir</Label>
+              <Label htmlFor="city" className="text-lg font-semibold">Şehir</Label>
               <Input
                 id="city"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
             <div>
-              <Label htmlFor="country">Ülke</Label>
+              <Label htmlFor="country" className="text-lg font-semibold">Ülke</Label>
               <Input
                 id="country"
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
             <div>
-              <Label htmlFor="postalCode">Posta Kodu</Label>
+              <Label htmlFor="postalCode" className="text-lg font-semibold">Posta Kodu</Label>
               <Input
                 id="postalCode"
                 name="postalCode"
                 value={formData.postalCode}
                 onChange={handleChange}
                 required
+                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
               />
             </div>
           </div>
@@ -313,9 +322,9 @@ export default function ApplyPage() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full md:w-auto"
+              className="w-full py-3 mt-6 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition duration-300"
             >
-              {isSubmitting ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
+              {isSubmitting ? 'Gönderiliyor...' : 'Başvur'}
             </Button>
           </div>
         </form>

@@ -22,20 +22,20 @@ export default function Dashboard() {
         {stats.map((stat) => (
           <div key={stat.title} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
-              <div>
+    <div>
                 <p className="text-sm font-medium text-gray-500">{stat.title}</p>
                 <p className="text-2xl font-semibold text-gray-900">{stat.value}</p>
-              </div>
+      </div>
               <div className={`${stat.color} p-3 rounded-full text-white`}>
                 <span className="text-xl">{stat.icon}</span>
-              </div>
+            </div>
             </div>
           </div>
         ))}
-      </div>
+        </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Hızlı İşlemler</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action) => (

@@ -188,7 +188,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-gray-600">
-                "CanadaEdu sayesinde hayalim olan Toronto Üniversitesi'ne kabul aldım. Vize sürecinde gösterdikleri profesyonel destek olmasaydı bu kadar kolay olmazdı."
+                "Kanada Kolay Vize sayesinde hayalim olan Toronto Üniversitesi'ne kabul aldım. Vize sürecinde gösterdikleri profesyonel destek olmasaydı bu kadar kolay olmazdı."
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
@@ -216,7 +216,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-gray-600">
-                "Başvuru sürecinde yanımdaydılar, burs imkanları konusunda bilgilendirdiler ve şimdi McGill'de burslu okuyorum. Teşekkürler CanadaEdu!"
+                "Başvuru sürecinde yanımdaydılar, burs imkanları konusunda bilgilendirdiler ve şimdi McGill'de burslu okuyorum. Teşekkürler Kanada Kolay Vize!"
               </p>
             </div>
           </div>

@@ -211,7 +211,7 @@ export default function LanguageEducation() {
                   </div>
                 </div>
                 <p className="text-gray-300">
-                  "6 aylık yoğun İngilizce programı için Toronto'ya gittim. CanadaEdu'nun desteğiyle doğru okulu seçtim ve harika bir deneyim yaşadım. Şimdi Kanada'da bir üniversitede eğitimime devam ediyorum."
+                  "6 aylık yoğun İngilizce programı için Toronto'ya gittim. Kanada Kolay Vize'nun desteğiyle doğru okulu seçtim ve harika bir deneyim yaşadım. Şimdi Kanada'da bir üniversitede eğitimime devam ediyorum."
                 </p>
               </div>
             </div>

@@ -30,7 +30,7 @@ export default function About() {
           
           <div className="space-y-6 relative z-10">
             <p className="text-gray-300">
-              CanadaEdu, 2008 yılında Kanada eğitim fırsatlarını Türk öğrencilere sunmak amacıyla kurulmuş bir eğitim danışmanlık şirketidir. 
+              Kanada Kolay Vize, 2008 yılında Kanada eğitim fırsatlarını Türk öğrencilere sunmak amacıyla kurulmuş bir eğitim danışmanlık şirketidir. 
               Toronto ve İstanbul'daki ofislerimizle, Kanada'da eğitim almak isteyen öğrencilere en doğru ve güncel bilgileri sunmakta, 
               başvuru süreçlerinde profesyonel destek sağlamaktayız.
             </p>
@@ -228,7 +228,7 @@ export default function About() {
               <div>
                 <h3 className="font-bold text-xl mb-2 text-white">2008: Kuruluş</h3>
                 <p className="text-gray-400 mb-4">
-                  CanadaEdu, Ahmet Yılmaz tarafından İstanbul'da kuruldu. İlk ofisimiz Şişli'de açıldı.
+                  Kanada Kolay Vize, Ahmet Yılmaz tarafından İstanbul'da kuruldu. İlk ofisimiz Şişli'de açıldı.
                 </p>
               </div>
             </div>
@@ -332,7 +332,7 @@ export default function About() {
                 </div>
               </div>
               <p className="text-gray-300">
-                "CanadaEdu'nun desteği olmasaydı Toronto Üniversitesi'ne kabul almam çok daha zor olurdu. Başvuru sürecimde gösterdikleri titizlik ve profesyonellik sayesinde hayalimi gerçekleştirdim."
+                "Kanada Kolay Vize'nun desteği olmasaydı Toronto Üniversitesi'ne kabul almam çok daha zor olurdu. Başvuru sürecimde gösterdikleri titizlik ve profesyonellik sayesinde hayalimi gerçekleştirdim."
               </p>
             </div>
           </div>
@@ -350,7 +350,7 @@ export default function About() {
                 </div>
               </div>
               <p className="text-gray-300">
-                "Vize başvurum reddedildikten sonra CanadaEdu ile çalışmaya başladım. Yeniden yapılandırdığımız başvurum kabul edildi ve şu an McGill'de hayalini kurduğum bölümde okuyorum."
+                "Vize başvurum reddedildikten sonra Kanada Kolay Vize ile çalışmaya başladım. Yeniden yapılandırdığımız başvurum kabul edildi ve şu an McGill'de hayalini kurduğum bölümde okuyorum."
               </p>
             </div>
           </div>
@@ -368,7 +368,7 @@ export default function About() {
                 </div>
               </div>
               <p className="text-gray-300">
-                "Kanada'ya dil eğitimi için gelmek istediğimde nereden başlayacağımı bilmiyordum. CanadaEdu'nun rehberliğiyle kısa sürede tüm işlemlerimi tamamladım ve şimdi Vancouver'dayım."
+                "Kanada'ya dil eğitimi için gelmek istediğimde nereden başlayacağımı bilmiyordum. Kanada Kolay Vize'nun rehberliğiyle kısa sürede tüm işlemlerimi tamamladım ve şimdi Vancouver'dayım."
               </p>
             </div>
           </div>
