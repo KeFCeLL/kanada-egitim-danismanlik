@@ -108,12 +108,12 @@ export async function POST(request: Request) {
     console.log('Başvuru başarıyla oluşturuldu:', newApplication[0]);
 
     return NextResponse.json(newApplication[0]);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Başvuru oluşturulurken hata:', error);
     return NextResponse.json(
       { 
         error: 'Başvuru oluşturulurken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
       },
       { status: 500 }
     );
