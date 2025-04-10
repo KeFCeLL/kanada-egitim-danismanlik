@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       title,
       page,
       content,
-      isActive: isActive ? 1 : 0,
+      isActive: isActive ? '1' : '0',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }).returning();
@@ -47,7 +47,7 @@ export async function PUT(request: Request) {
         title,
         page,
         content,
-        isActive: isActive ? 1 : 0,
+        isActive: isActive ? '1' : '0',
         updatedAt: new Date().toISOString(),
       })
       .where(eq(contentSections.id, id))
