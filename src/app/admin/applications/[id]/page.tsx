@@ -30,7 +30,9 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
       englishLevel: application[0].englishLevel || '',
       frenchLevel: application[0].frenchLevel || '',
       budget: Number(application[0].budget),
-      status: (application[0].status as ApplicationStatus) || 'pending'
+      status: (application[0].status as ApplicationStatus) || 'pending',
+      createdAt: application[0].createdAt || new Date().toISOString(),
+      updatedAt: application[0].updatedAt || new Date().toISOString()
     };
 
     return <ApplicationDetail application={formattedApplication} />;

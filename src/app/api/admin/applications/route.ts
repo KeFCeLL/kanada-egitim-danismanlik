@@ -40,7 +40,9 @@ export async function GET() {
       englishLevel: app.englishLevel || '',
       frenchLevel: app.frenchLevel || '',
       budget: Number(app.budget), // Convert budget to number
-      status: (app.status as ApplicationStatus) || 'pending'
+      status: (app.status as ApplicationStatus) || 'pending',
+      createdAt: app.createdAt || new Date().toISOString(),
+      updatedAt: app.updatedAt || new Date().toISOString()
     }));
 
     console.log('Fetched applications:', formattedApplications);
