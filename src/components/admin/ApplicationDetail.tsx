@@ -19,7 +19,7 @@ interface Application {
   education: string;
   workExperience: string;
   skills: string;
-  additionalInfo: string;
+  additionalInfo?: string | null;
   status: 'pending' | 'reviewed' | 'completed';
   createdAt: string;
   updatedAt: string;
