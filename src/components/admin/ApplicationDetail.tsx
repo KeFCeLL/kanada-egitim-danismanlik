@@ -1,20 +1,41 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Application } from '@/lib/db/schema';
+import Link from 'next/link';
+
+interface Application {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  gender: string;
+  address: string;
+  city: string;
+  country: string;
+  postalCode: string;
+  educationLevel: string;
+  workExperience: string;
+  englishLevel: string;
+  programInterest: string;
+  additionalInfo: string;
+  status: 'pending' | 'reviewed' | 'completed';
+  createdAt: string;
+}
 
 interface ApplicationDetailProps {
   application: Application;
 }
 
-export function ApplicationDetail({ application }: ApplicationDetailProps) {
-  const [currentApplication, setCurrentApplication] = useState(application);
-  const [error, setError] = useState<string | null>(null);
+export default function ApplicationDetail({ application }: ApplicationDetailProps) {
+  const router = useRouter();
+  const [status, setStatus] = useState(application.status);
 
-  const updateStatus = async (newStatus: Application['status']) => {
+  const updateStatus = async (newStatus: 'pending' | 'reviewed' | 'completed') => {
     try {
-      const response = await fetch(`/api/admin/applications/${currentApplication.id}`, {
+      const response = await fetch(`/api/admin/applications/${application.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -23,166 +44,147 @@ export function ApplicationDetail({ application }: ApplicationDetailProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Durum güncellenirken bir hata oluştu');
+        throw new Error('Failed to update status');
       }
 
-      setCurrentApplication(prev => ({ ...prev, status: newStatus }));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
-    }
-  };
-
-  const getStatusColor = (status: Application['status']) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
-      case 'reviewed':
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-      case 'accepted':
-        return 'bg-green-500/10 text-green-400 border-green-500/20';
-      case 'rejected':
-        return 'bg-red-500/10 text-red-400 border-red-500/20';
-      default:
-        return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
-    }
-  };
-
-  const getStatusText = (status: Application['status']) => {
-    switch (status) {
-      case 'pending':
-        return 'Beklemede';
-      case 'reviewed':
-        return 'İncelendi';
-      case 'accepted':
-        return 'Kabul Edildi';
-      case 'rejected':
-        return 'Reddedildi';
-      default:
-        return status;
+      setStatus(newStatus);
+    } catch (error) {
+      console.error('Error updating status:', error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white py-16">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-3xl backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-10"
+          className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10"
         >
-          <div className="absolute -left-32 -bottom-32 w-64 h-64 bg-blue-600/20 rounded-full filter blur-3xl"></div>
-          <div className="absolute -right-32 -top-32 w-64 h-64 bg-purple-600/20 rounded-full filter blur-3xl"></div>
-          
-          <div className="relative z-10">
-            <div className="flex justify-between items-start mb-8">
-              <div>
-                <div className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text font-bold text-xl mb-2">BAŞVURU DETAYI</div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-2">{currentApplication.first_name} {currentApplication.last_name}</h1>
-                <p className="text-xl text-gray-300">
-                  Başvuru Tarihi: {new Date(currentApplication.created_at).toLocaleDateString('tr-TR')}
-                </p>
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => updateStatus('reviewed')}
-                  className="px-4 py-2 text-blue-400 hover:text-blue-300 border border-blue-400/20 hover:border-blue-300/20 rounded-xl transition-colors"
-                >
-                  İncele
-                </button>
-                <button
-                  onClick={() => updateStatus('accepted')}
-                  className="px-4 py-2 text-green-400 hover:text-green-300 border border-green-400/20 hover:border-green-300/20 rounded-xl transition-colors"
-                >
-                  Kabul Et
-                </button>
-                <button
-                  onClick={() => updateStatus('rejected')}
-                  className="px-4 py-2 text-red-400 hover:text-red-300 border border-red-400/20 hover:border-red-300/20 rounded-xl transition-colors"
-                >
-                  Reddet
-                </button>
-              </div>
-            </div>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold text-white">Başvuru Detayları</h1>
+            <Link
+              href="/admin/applications"
+              className="px-4 py-2 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-colors"
+            >
+              Geri Dön
+            </Link>
+          </div>
 
-            {error && (
-              <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400">
-                {error}
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Kişisel Bilgiler</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">E-posta</label>
-                    <div className="mt-1 text-white">{currentApplication.email}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Telefon</label>
-                    <div className="mt-1 text-white">{currentApplication.phone}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Doğum Tarihi</label>
-                    <div className="mt-1 text-white">{currentApplication.birth_date}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Adres Bilgileri</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Adres</label>
-                    <div className="mt-1 text-white">{currentApplication.address}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Şehir</label>
-                    <div className="mt-1 text-white">{currentApplication.city}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">İlçe</label>
-                    <div className="mt-1 text-white">{currentApplication.province}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Posta Kodu</label>
-                    <div className="mt-1 text-white">{currentApplication.postal_code}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Eğitim Bilgileri</h2>
-                <div className="bg-white/5 rounded-xl p-4 text-white">
-                  {currentApplication.education}
-                </div>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-4">İş Deneyimi</h2>
-                <div className="bg-white/5 rounded-xl p-4 text-white">
-                  {currentApplication.work_experience}
-                </div>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Yetenekler</h2>
-                <div className="bg-white/5 rounded-xl p-4 text-white">
-                  {currentApplication.skills}
-                </div>
-              </div>
-
-              {currentApplication.additional_info && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-4">Kişisel Bilgiler</h2>
+              <div className="space-y-4">
                 <div>
-                  <h2 className="text-xl font-semibold mb-4">Ek Bilgiler</h2>
-                  <div className="bg-white/5 rounded-xl p-4 text-white">
-                    {currentApplication.additional_info}
-                  </div>
+                  <label className="block text-sm font-medium text-gray-400">Ad Soyad</label>
+                  <p className="mt-1 text-white">{application.name}</p>
                 </div>
-              )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">E-posta</label>
+                  <p className="mt-1 text-white">{application.email}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Telefon</label>
+                  <p className="mt-1 text-white">{application.phone}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Doğum Tarihi</label>
+                  <p className="mt-1 text-white">{application.birthDate}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Cinsiyet</label>
+                  <p className="mt-1 text-white">{application.gender}</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-4">Adres Bilgileri</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Adres</label>
+                  <p className="mt-1 text-white">{application.address}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Şehir</label>
+                  <p className="mt-1 text-white">{application.city}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Ülke</label>
+                  <p className="mt-1 text-white">{application.country}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400">Posta Kodu</label>
+                  <p className="mt-1 text-white">{application.postalCode}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-white mb-4">Eğitim ve Deneyim</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label className="block text-sm font-medium text-gray-400">Eğitim Seviyesi</label>
+                <p className="mt-1 text-white">{application.educationLevel}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400">İş Deneyimi</label>
+                <p className="mt-1 text-white">{application.workExperience}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400">İngilizce Seviyesi</label>
+                <p className="mt-1 text-white">{application.englishLevel}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400">İlgilendiği Program</label>
+                <p className="mt-1 text-white">{application.programInterest}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-white mb-4">Ek Bilgiler</h2>
+            <div>
+              <label className="block text-sm font-medium text-gray-400">Ek Bilgiler</label>
+              <p className="mt-1 text-white">{application.additionalInfo}</p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-white mb-4">Başvuru Durumu</h2>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => updateStatus('pending')}
+                className={`px-4 py-2 rounded-xl ${
+                  status === 'pending'
+                    ? 'bg-yellow-500 text-white'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+              >
+                İncele
+              </button>
+              <button
+                onClick={() => updateStatus('reviewed')}
+                className={`px-4 py-2 rounded-xl ${
+                  status === 'reviewed'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+              >
+                Kabul Et
+              </button>
+              <button
+                onClick={() => updateStatus('completed')}
+                className={`px-4 py-2 rounded-xl ${
+                  status === 'completed'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+              >
+                Reddet
+              </button>
             </div>
           </div>
         </motion.div>

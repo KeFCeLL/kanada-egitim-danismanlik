@@ -2,7 +2,7 @@ import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
-import { ApplicationDetail } from '@/components/admin/ApplicationDetail';
+import ApplicationDetail from '@/components/admin/ApplicationDetail';
 
 interface PageProps {
   params: {
