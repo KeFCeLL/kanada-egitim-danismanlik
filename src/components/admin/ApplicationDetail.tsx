@@ -24,8 +24,8 @@ interface Application {
   startDate: string;
   budget: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }
 
 interface ApplicationDetailProps {
