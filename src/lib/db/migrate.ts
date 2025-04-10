@@ -1,10 +1,11 @@
 import { db } from './index';
 import * as schema from './schema';
+import { sql } from 'drizzle-orm';
 
 async function migrate() {
   try {
     // Create dialogs table
-    await db.execute(`
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS dialogs (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -20,7 +21,7 @@ async function migrate() {
     `);
 
     // Create forms table
-    await db.execute(`
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS forms (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -33,7 +34,7 @@ async function migrate() {
     `);
 
     // Create form_fields table
-    await db.execute(`
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS form_fields (
         id TEXT PRIMARY KEY,
         form_id TEXT NOT NULL,
@@ -50,7 +51,7 @@ async function migrate() {
     `);
 
     // Create content_sections table
-    await db.execute(`
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS content_sections (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -63,7 +64,7 @@ async function migrate() {
     `);
 
     // Create applications table
-    await db.execute(`
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS applications (
         id TEXT PRIMARY KEY,
         first_name TEXT NOT NULL,
@@ -89,7 +90,7 @@ async function migrate() {
     `);
 
     // Create contacts table
-    await db.execute(`
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS contacts (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
