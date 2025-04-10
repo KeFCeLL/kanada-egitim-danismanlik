@@ -5,11 +5,11 @@ import { eq } from 'drizzle-orm';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const application = await db.query.applications.findFirst({
-      where: eq(applications.id, params.id),
+      where: eq(applications.id, context.params.id),
     });
 
     if (!application) {
@@ -28,7 +28,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const body = await request.json();
@@ -37,7 +37,7 @@ export async function PUT(
     const updatedApplication = await db
       .update(applications)
       .set({ status })
-      .where(eq(applications.id, params.id))
+      .where(eq(applications.id, context.params.id))
       .returning();
 
     if (!updatedApplication.length) {
