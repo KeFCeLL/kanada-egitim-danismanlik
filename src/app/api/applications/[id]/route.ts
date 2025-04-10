@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
+type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
+
 export async function GET(
   request: Request,
   context: { params: { id: string } }
@@ -11,10 +13,9 @@ export async function GET(
     const application = await db
       .select()
       .from(applications)
-      .where(eq(applications.id, context.params.id))
-      .limit(1);
+      .where(eq(applications.id, context.params.id));
 
-    if (!application.length) {
+    if (!application || application.length === 0) {
       return NextResponse.json(
         { error: 'Başvuru bulunamadı' },
         { status: 404 }
@@ -71,18 +72,28 @@ export async function PATCH(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const { status } = await request.json();
-    
+
+    if (!status || !['pending', 'reviewed', 'completed'].includes(status)) {
+      return NextResponse.json(
+        { error: 'Geçersiz durum değeri' },
+        { status: 400 }
+      );
+    }
+
     const updatedApplication = await db
       .update(applications)
-      .set({ status })
-      .where(eq(applications.id, params.id))
+      .set({ 
+        status,
+        updatedAt: new Date().toISOString()
+      })
+      .where(eq(applications.id, context.params.id))
       .returning();
 
-    if (!updatedApplication.length) {
+    if (!updatedApplication || updatedApplication.length === 0) {
       return NextResponse.json(
         { error: 'Başvuru bulunamadı' },
         { status: 404 }
