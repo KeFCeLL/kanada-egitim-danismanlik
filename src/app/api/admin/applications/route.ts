@@ -7,29 +7,29 @@ type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
 
 export async function GET() {
   try {
-    const results = await db.select().from(applications).orderBy(desc(applications.created_at));
+    const results = await db.select().from(applications).orderBy(desc(applications.createdAt));
     
     const formattedApplications = results.map(app => ({
       id: app.id,
-      firstName: app.first_name,
-      lastName: app.last_name,
+      firstName: app.firstName,
+      lastName: app.lastName,
       email: app.email,
       phone: app.phone,
-      birthDate: app.birth_date,
+      birthDate: app.birthDate,
       address: app.address,
       city: app.city,
       country: app.country,
-      postalCode: app.postal_code,
-      educationLevel: app.education_level,
-      workExperience: app.work_experience || '',
-      englishLevel: app.english_level || '',
-      frenchLevel: app.french_level || '',
+      postalCode: app.postalCode,
+      educationLevel: app.educationLevel,
+      workExperience: app.workExperience || '',
+      englishLevel: app.englishLevel || '',
+      frenchLevel: app.frenchLevel || '',
       program: app.program,
-      startDate: app.start_date,
+      startDate: app.startDate,
       budget: Number(app.budget),
       status: app.status,
-      createdAt: app.created_at,
-      updatedAt: app.updated_at
+      createdAt: app.createdAt,
+      updatedAt: app.updatedAt
     }));
 
     return NextResponse.json(formattedApplications);
