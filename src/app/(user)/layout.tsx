@@ -17,9 +17,9 @@ export default function UserLayout({ children }: UserLayoutProps) {
                 <Image
                   src="/images/logo.svg"
                   alt="Kanada Kolay Vize"
-                  width={250}
-                  height={70}
-                  className="h-14 w-auto"
+                  width={450}
+                  height={110}
+                  className="h-20 w-auto"
                   priority
                 />
               </Link>
