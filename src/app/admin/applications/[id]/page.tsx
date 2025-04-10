@@ -10,6 +10,8 @@ interface PageProps {
   };
 }
 
+type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
+
 export default async function ApplicationDetailPage({ params }: PageProps) {
   try {
     const application = await db
@@ -27,7 +29,8 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
       workExperience: application[0].workExperience || '',
       englishLevel: application[0].englishLevel || '',
       frenchLevel: application[0].frenchLevel || '',
-      budget: Number(application[0].budget)
+      budget: Number(application[0].budget),
+      status: (application[0].status as ApplicationStatus) || 'pending'
     };
 
     return <ApplicationDetail application={formattedApplication} />;

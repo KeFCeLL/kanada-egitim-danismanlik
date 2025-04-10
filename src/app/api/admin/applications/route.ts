@@ -4,6 +4,8 @@ import { applications } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
 
+type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
+
 // Veritabanı bağlantısını test et
 async function testDatabaseConnection() {
   try {
@@ -37,7 +39,8 @@ export async function GET() {
       workExperience: app.workExperience || '',
       englishLevel: app.englishLevel || '',
       frenchLevel: app.frenchLevel || '',
-      budget: Number(app.budget) // Convert budget to number
+      budget: Number(app.budget), // Convert budget to number
+      status: (app.status as ApplicationStatus) || 'pending'
     }));
 
     console.log('Fetched applications:', formattedApplications);
