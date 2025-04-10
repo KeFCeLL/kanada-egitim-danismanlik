@@ -8,11 +8,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const application = await db
-      .select()
-      .from(applications)
-      .where(eq(applications.id, params.id))
-      .get();
+    const application = await db.query.applications.findFirst({
+      where: eq(applications.id, params.id),
+    });
 
     if (!application) {
       return NextResponse.json(
