@@ -5,25 +5,27 @@ import { eq } from 'drizzle-orm';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const application = await db.query.applications.findFirst({
-      where: eq(applications.id, params.id),
-    });
+    const application = await db
+      .select()
+      .from(applications)
+      .where(eq(applications.id, context.params.id))
+      .limit(1);
 
-    if (!application) {
+    if (!application.length) {
       return NextResponse.json(
-        { error: 'Application not found' },
+        { error: 'Başvuru bulunamadı' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(application);
+    return NextResponse.json(application[0]);
   } catch (error) {
     console.error('Error fetching application:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch application' },
+      { error: 'Başvuru alınırken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -31,25 +33,37 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const data = await request.json();
-    
-    const result = await db
+    const body = await request.json();
+    const { status } = body;
+
+    if (!status) {
+      return NextResponse.json(
+        { error: 'Durum alanı gereklidir' },
+        { status: 400 }
+      );
+    }
+
+    const updatedApplication = await db
       .update(applications)
-      .set({
-        ...data,
-        updatedAt: new Date().toISOString(),
-      })
-      .where(eq(applications.id, params.id))
+      .set({ status, updatedAt: new Date() })
+      .where(eq(applications.id, context.params.id))
       .returning();
 
-    return NextResponse.json(result[0]);
+    if (!updatedApplication.length) {
+      return NextResponse.json(
+        { error: 'Başvuru bulunamadı' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedApplication[0]);
   } catch (error) {
     console.error('Error updating application:', error);
     return NextResponse.json(
-      { error: 'Failed to update application' },
+      { error: 'Başvuru güncellenirken bir hata oluştu' },
       { status: 500 }
     );
   }

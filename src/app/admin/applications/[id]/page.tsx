@@ -1,26 +1,25 @@
+import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
-import ApplicationDetail from '@/components/admin/ApplicationDetail';
-import { use } from 'react';
+import ApplicationDetail from './ApplicationDetail';
 
 interface PageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
 export default async function ApplicationDetailPage({ params }: PageProps) {
-  const { id } = use(params);
-  
-  const application = await db.query.applications.findFirst({
-    where: eq(applications.id, id),
-  });
+  const application = await db
+    .select()
+    .from(applications)
+    .where(eq(applications.id, params.id))
+    .limit(1);
 
-  if (!application) {
+  if (!application.length) {
     notFound();
   }
 
-  return <ApplicationDetail application={application} />;
+  return <ApplicationDetail application={application[0]} />;
 } 
