@@ -10,18 +10,30 @@ export async function GET() {
     const allApplications = await db
       .select()
       .from(applications)
-      .orderBy(desc(applications.createdAt));
+      .orderBy(desc(applications.created_at));
     
-    // Convert null values to empty strings for optional fields
+    // Convert database fields to camelCase for frontend and handle optional fields
     const formattedApplications = allApplications.map(app => ({
-      ...app,
-      workExperience: app.workExperience || '',
-      englishLevel: app.englishLevel || '',
-      frenchLevel: app.frenchLevel || '',
-      budget: Number(app.budget), // Convert budget to number
+      id: app.id,
+      firstName: app.first_name,
+      lastName: app.last_name,
+      email: app.email,
+      phone: app.phone,
+      birthDate: app.birth_date,
+      address: app.address,
+      city: app.city,
+      country: app.country,
+      postalCode: app.postal_code,
+      educationLevel: app.education_level,
+      workExperience: app.work_experience || '',
+      englishLevel: app.english_level || '',
+      frenchLevel: app.french_level || '',
+      program: app.program,
+      startDate: app.start_date,
+      budget: Number(app.budget),
       status: (app.status as ApplicationStatus) || 'pending',
-      createdAt: app.createdAt || new Date().toISOString(),
-      updatedAt: app.updatedAt || new Date().toISOString()
+      createdAt: app.created_at || new Date().toISOString(),
+      updatedAt: app.updated_at || new Date().toISOString()
     }));
 
     console.log('Fetched applications:', formattedApplications);
