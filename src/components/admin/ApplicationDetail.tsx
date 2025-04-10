@@ -7,22 +7,22 @@ import Link from 'next/link';
 
 interface Application {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   birthDate: string;
-  gender: string;
   address: string;
   city: string;
-  country: string;
+  province: string;
   postalCode: string;
-  educationLevel: string;
+  education: string;
   workExperience: string;
-  englishLevel: string;
-  programInterest: string;
+  skills: string;
   additionalInfo: string;
   status: 'pending' | 'reviewed' | 'completed';
   createdAt: string;
+  updatedAt: string;
 }
 
 interface ApplicationDetailProps {
@@ -78,7 +78,7 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-400">Ad Soyad</label>
-                  <p className="mt-1 text-white">{application.name}</p>
+                  <p className="mt-1 text-white">{application.firstName} {application.lastName}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400">E-posta</label>
@@ -91,10 +91,6 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
                 <div>
                   <label className="block text-sm font-medium text-gray-400">Doğum Tarihi</label>
                   <p className="mt-1 text-white">{application.birthDate}</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-400">Cinsiyet</label>
-                  <p className="mt-1 text-white">{application.gender}</p>
                 </div>
               </div>
             </div>
@@ -111,8 +107,8 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
                   <p className="mt-1 text-white">{application.city}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400">Ülke</label>
-                  <p className="mt-1 text-white">{application.country}</p>
+                  <label className="block text-sm font-medium text-gray-400">İl</label>
+                  <p className="mt-1 text-white">{application.province}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400">Posta Kodu</label>
@@ -127,19 +123,15 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <label className="block text-sm font-medium text-gray-400">Eğitim Seviyesi</label>
-                <p className="mt-1 text-white">{application.educationLevel}</p>
+                <p className="mt-1 text-white">{application.education}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-400">İş Deneyimi</label>
                 <p className="mt-1 text-white">{application.workExperience}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400">İngilizce Seviyesi</label>
-                <p className="mt-1 text-white">{application.englishLevel}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-400">İlgilendiği Program</label>
-                <p className="mt-1 text-white">{application.programInterest}</p>
+                <label className="block text-sm font-medium text-gray-400">Yetenekler</label>
+                <p className="mt-1 text-white">{application.skills}</p>
               </div>
             </div>
           </div>
