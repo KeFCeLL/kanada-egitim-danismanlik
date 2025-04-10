@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
-import { text, integer, sqliteTable } from 'drizzle-orm/sqlite-core';
+import { text, integer, pgTable } from 'drizzle-orm/pg-core';
 
-export const dialogs = sqliteTable('dialogs', {
+export const dialogs = pgTable('dialogs', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
   content: text('content').notNull(),
@@ -14,7 +14,7 @@ export const dialogs = sqliteTable('dialogs', {
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const forms = sqliteTable('forms', {
+export const forms = pgTable('forms', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
   description: text('description').notNull(),
@@ -24,7 +24,7 @@ export const forms = sqliteTable('forms', {
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const formFields = sqliteTable('form_fields', {
+export const formFields = pgTable('form_fields', {
   id: text('id').primaryKey(),
   formId: text('form_id').notNull().references(() => forms.id),
   label: text('label').notNull(),
@@ -37,7 +37,7 @@ export const formFields = sqliteTable('form_fields', {
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const contentSections = sqliteTable('content_sections', {
+export const contentSections = pgTable('content_sections', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
   page: text('page').notNull(),
@@ -47,7 +47,7 @@ export const contentSections = sqliteTable('content_sections', {
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const applications = sqliteTable('applications', {
+export const applications = pgTable('applications', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
@@ -67,7 +67,7 @@ export const applications = sqliteTable('applications', {
   updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString()),
 });
 
-export const contacts = sqliteTable('contacts', {
+export const contacts = pgTable('contacts', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   name: text('name').notNull(),
   email: text('email').notNull(),
