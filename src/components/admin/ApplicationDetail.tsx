@@ -17,9 +17,9 @@ interface Application {
   country: string;
   postalCode: string;
   educationLevel: string;
-  workExperience: string;
-  englishLevel: string;
-  frenchLevel: string;
+  workExperience?: string | null;
+  englishLevel?: string | null;
+  frenchLevel?: string | null;
   program: string;
   startDate: string;
   budget: string;
