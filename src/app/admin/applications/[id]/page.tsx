@@ -3,16 +3,19 @@ import { applications } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import ApplicationDetail from '@/components/admin/ApplicationDetail';
+import { use } from 'react';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function ApplicationDetailPage({ params }: PageProps) {
+export default function ApplicationDetailPage({ params }: PageProps) {
+  const { id } = use(params);
+  
   const application = await db.query.applications.findFirst({
-    where: eq(applications.id, params.id),
+    where: eq(applications.id, id),
   });
 
   if (!application) {

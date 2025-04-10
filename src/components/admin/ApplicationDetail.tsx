@@ -31,9 +31,9 @@ interface ApplicationDetailProps {
 
 export default function ApplicationDetail({ application }: ApplicationDetailProps) {
   const router = useRouter();
-  const [status, setStatus] = useState(application.status);
+  const [status, setStatus] = useState<Application['status']>(application.status);
 
-  const updateStatus = async (newStatus: 'pending' | 'reviewed' | 'completed') => {
+  const updateStatus = async (newStatus: Application['status']) => {
     try {
       const response = await fetch(`/api/admin/applications/${application.id}`, {
         method: 'PUT',
