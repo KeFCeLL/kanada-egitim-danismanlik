@@ -14,12 +14,15 @@ interface Application {
   birthDate: string;
   address: string;
   city: string;
-  province: string;
+  country: string;
   postalCode: string;
-  education: string;
+  educationLevel: string;
   workExperience: string;
-  skills: string;
-  additionalInfo?: string | null;
+  englishLevel: string;
+  frenchLevel: string;
+  program: string;
+  startDate: string;
+  budget: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -107,8 +110,8 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
                   <p className="mt-1 text-white">{application.city}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400">İl</label>
-                  <p className="mt-1 text-white">{application.province}</p>
+                  <label className="block text-sm font-medium text-gray-400">Ülke</label>
+                  <p className="mt-1 text-white">{application.country}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400">Posta Kodu</label>
@@ -123,24 +126,42 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <label className="block text-sm font-medium text-gray-400">Eğitim Seviyesi</label>
-                <p className="mt-1 text-white">{application.education}</p>
+                <p className="mt-1 text-white">{application.educationLevel}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-400">İş Deneyimi</label>
                 <p className="mt-1 text-white">{application.workExperience}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400">Yetenekler</label>
-                <p className="mt-1 text-white">{application.skills}</p>
+                <label className="block text-sm font-medium text-gray-400">İngilizce Seviyesi</label>
+                <p className="mt-1 text-white">{application.englishLevel}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400">Fransızca Seviyesi</label>
+                <p className="mt-1 text-white">{application.frenchLevel}</p>
               </div>
             </div>
           </div>
 
           <div className="mt-8">
-            <h2 className="text-xl font-semibold text-white mb-4">Ek Bilgiler</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Program ve Başlangıç Tarihi</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label className="block text-sm font-medium text-gray-400">Program</label>
+                <p className="mt-1 text-white">{application.program}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400">Başlangıç Tarihi</label>
+                <p className="mt-1 text-white">{application.startDate}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-white mb-4">Bütçe</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-400">Ek Bilgiler</label>
-              <p className="mt-1 text-white">{application.additionalInfo}</p>
+              <label className="block text-sm font-medium text-gray-400">Bütçe</label>
+              <p className="mt-1 text-white">{application.budget}</p>
             </div>
           </div>
 
