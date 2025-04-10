@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Maple Leaf -->
+  <path d="M20,30 C20,30 25,15 30,20 C35,25 30,35 30,35 C30,35 35,25 40,20 C45,15 50,30 50,30 C50,30 45,45 40,40 C35,35 30,35 30,35 C30,35 35,35 40,40 C45,45 50,30 50,30 C50,30 45,15 40,20 C35,25 30,35 30,35 C30,35 35,25 40,20 C45,15 50,30 50,30" 
+        fill="#D52B1E" stroke="#D52B1E" stroke-width="2"/>
+  
+  <!-- Text -->
+  <text x="70" y="35" font-family="Arial" font-size="20" font-weight="bold" fill="#D52B1E">
+    Kanada Kolay Vize
+  </text>
+</svg> 

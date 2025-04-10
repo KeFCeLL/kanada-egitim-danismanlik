@@ -15,10 +15,11 @@ export default function UserLayout({ children }: UserLayoutProps) {
             <div className="flex items-center">
               <Link href="/" className="relative w-[300px] h-[50px]">
                 <Image
-                  src="/logo.svg"
+                  src="/images/logo.svg"
                   alt="Kanada Kolay Vize"
-                  fill
-                  style={{ objectFit: 'contain' }}
+                  width={200}
+                  height={60}
+                  className="h-12 w-auto"
                   priority
                 />
               </Link>
