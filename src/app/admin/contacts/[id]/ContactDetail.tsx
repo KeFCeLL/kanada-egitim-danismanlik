@@ -12,8 +12,9 @@ interface Contact {
   phone: string;
   subject: string;
   message: string;
-  status: 'pending' | 'reviewed' | 'completed';
+  status: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface ContactDetailProps {
