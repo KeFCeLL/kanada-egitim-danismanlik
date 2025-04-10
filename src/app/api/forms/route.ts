@@ -27,10 +27,10 @@ export async function POST(request: Request) {
       id: formId,
       title,
       description,
-      is_active: isActive ? 1 : 0,
-      submit_button_text: submitButtonText,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      isActive: isActive ? 1 : 0,
+      submitButtonText,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }).returning();
 
     // Create form fields
@@ -38,15 +38,15 @@ export async function POST(request: Request) {
       await db.insert(formFields).values(
         fields.map((field: any, index: number) => ({
           id: uuidv4(),
-          form_id: formId,
+          formId,
           label: field.label,
           type: field.type,
           required: field.required ? 1 : 0,
           options: field.options ? JSON.stringify(field.options) : null,
           placeholder: field.placeholder,
           order: index + 1,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         }))
       );
     }
@@ -68,9 +68,9 @@ export async function PUT(request: Request) {
       .set({
         title,
         description,
-        is_active: isActive ? 1 : 0,
-        submit_button_text: submitButtonText,
-        updated_at: new Date().toISOString(),
+        isActive: isActive ? 1 : 0,
+        submitButtonText,
+        updatedAt: new Date().toISOString(),
       })
       .where(eq(forms.id, id))
       .returning();
@@ -79,23 +79,24 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
 
-    // Delete existing fields
-    await db.delete(formFields).where(eq(formFields.form_id, id));
-
-    // Create new fields
+    // Update form fields
     if (fields && fields.length > 0) {
+      // Delete existing fields
+      await db.delete(formFields).where(eq(formFields.formId, id));
+
+      // Insert new fields
       await db.insert(formFields).values(
         fields.map((field: any, index: number) => ({
           id: uuidv4(),
-          form_id: id,
+          formId: id,
           label: field.label,
           type: field.type,
           required: field.required ? 1 : 0,
           options: field.options ? JSON.stringify(field.options) : null,
           placeholder: field.placeholder,
           order: index + 1,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         }))
       );
     }
@@ -113,20 +114,14 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Form ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    // Delete form fields first (due to foreign key constraint)
-    await db.delete(formFields).where(eq(formFields.form_id, id));
+    // Delete form fields first
+    await db.delete(formFields).where(eq(formFields.formId, id));
 
     // Delete form
-    const deletedForm = await db.delete(forms)
-      .where(eq(forms.id, id))
-      .returning();
-
-    if (!deletedForm.length) {
-      return NextResponse.json({ error: 'Form not found' }, { status: 404 });
-    }
+    await db.delete(forms).where(eq(forms.id, id));
 
     return NextResponse.json({ message: 'Form deleted successfully' });
   } catch (error) {
