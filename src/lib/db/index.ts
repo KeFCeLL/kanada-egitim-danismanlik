@@ -9,7 +9,10 @@ if (!connectionString) {
 }
 
 const client = postgres(connectionString, {
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: 10, // Maximum number of connections in the pool
+  idle_timeout: 20, // Close idle connections after 20 seconds
+  connect_timeout: 10, // Timeout for establishing a connection
 });
 
 export const db = drizzle(client, { schema }); 
