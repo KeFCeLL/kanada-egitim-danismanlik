@@ -96,7 +96,7 @@ export async function POST(request: Request) {
       frenchLevel: data.frenchLevel || '',
       program: data.program,
       startDate: data.startDate,
-      budget: Number(data.budget),
+      budget: String(data.budget),
       status: 'pending'
     }).returning();
 
