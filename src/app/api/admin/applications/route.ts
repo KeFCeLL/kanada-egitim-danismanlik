@@ -30,10 +30,10 @@ export async function GET() {
       frenchLevel: app.frenchLevel || '',
       program: app.program,
       startDate: app.startDate,
-      budget: Number(app.budget),
-      status: (app.status as ApplicationStatus) || 'pending',
-      createdAt: app.createdAt || new Date().toISOString(),
-      updatedAt: app.updatedAt || new Date().toISOString()
+      budget: app.budget,
+      status: app.status as ApplicationStatus,
+      createdAt: app.createdAt,
+      updatedAt: app.updatedAt
     }));
 
     console.log('Fetched applications:', formattedApplications);
