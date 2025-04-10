@@ -36,16 +36,9 @@ export async function GET() {
       updatedAt: app.updatedAt
     }));
 
-    console.log('Fetched applications:', formattedApplications);
-    
     return NextResponse.json(formattedApplications);
   } catch (error: any) {
     console.error('Error fetching applications:', error);
-    console.error('Error details:', {
-      message: error?.message,
-      stack: error?.stack,
-      code: error?.code
-    });
     return NextResponse.json(
       { 
         error: 'Başvurular alınırken bir hata oluştu',
