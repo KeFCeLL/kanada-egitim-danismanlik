@@ -9,7 +9,7 @@ interface UserLayoutProps {
 export default function UserLayout({ children }: UserLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-[#DC2626]">
+      <header className="bg-[#8B0000]">
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center justify-between">
             <div className="flex items-center">
@@ -17,9 +17,9 @@ export default function UserLayout({ children }: UserLayoutProps) {
                 <Image
                   src="/images/logo.svg"
                   alt="Kanada Kolay Vize"
-                  width={200}
-                  height={60}
-                  className="h-12 w-auto"
+                  width={250}
+                  height={70}
+                  className="h-14 w-auto"
                   priority
                 />
               </Link>
