@@ -25,12 +25,12 @@ export async function POST(request: Request) {
       title,
       content,
       type,
-      is_active: isActive ? 1 : 0,
-      start_date: startDate,
-      end_date: endDate,
-      target_page: targetPage,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      isActive: isActive ? 1 : 0,
+      startDate,
+      endDate,
+      targetPage,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }).returning();
 
     return NextResponse.json(newDialog[0]);
@@ -50,11 +50,11 @@ export async function PUT(request: Request) {
         title,
         content,
         type,
-        is_active: isActive ? 1 : 0,
-        start_date: startDate,
-        end_date: endDate,
-        target_page: targetPage,
-        updated_at: new Date().toISOString(),
+        isActive: isActive ? 1 : 0,
+        startDate,
+        endDate,
+        targetPage,
+        updatedAt: new Date().toISOString(),
       })
       .where(eq(dialogs.id, id))
       .returning();
@@ -76,17 +76,10 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Dialog ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const deletedDialog = await db.delete(dialogs)
-      .where(eq(dialogs.id, id))
-      .returning();
-
-    if (!deletedDialog.length) {
-      return NextResponse.json({ error: 'Dialog not found' }, { status: 404 });
-    }
-
+    await db.delete(dialogs).where(eq(dialogs.id, id));
     return NextResponse.json({ message: 'Dialog deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete dialog' }, { status: 500 });
