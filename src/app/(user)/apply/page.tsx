@@ -14,18 +14,21 @@ export default function ApplyPage() {
     birthDate: '',
     address: '',
     city: '',
-    province: '',
+    country: '',
     postalCode: '',
-    education: '',
+    educationLevel: '',
     workExperience: '',
-    skills: '',
-    additionalInfo: ''
+    englishLevel: '',
+    frenchLevel: '',
+    program: '',
+    startDate: '',
+    budget: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     // Clear error when user starts typing
@@ -44,11 +47,12 @@ export default function ApplyPage() {
       'birthDate',
       'address',
       'city',
-      'province',
+      'country',
       'postalCode',
-      'education',
-      'workExperience',
-      'skills'
+      'educationLevel',
+      'program',
+      'startDate',
+      'budget'
     ];
 
     requiredFields.forEach(field => {
@@ -106,139 +110,111 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white py-16">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-3xl backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-10"
+          className="bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-xl p-8"
         >
-          <div className="absolute -left-32 -bottom-32 w-64 h-64 bg-blue-600/20 rounded-full filter blur-3xl"></div>
-          <div className="absolute -right-32 -top-32 w-64 h-64 bg-purple-600/20 rounded-full filter blur-3xl"></div>
+          <h1 className="text-3xl font-bold text-white mb-8 text-center">Başvuru Formu</h1>
           
-          <div className="relative z-10">
-            <div className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text font-bold text-xl mb-2">BAŞVURU</div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Başvuru Formu</h1>
-            <p className="text-xl mb-10 text-gray-300">
-              Lütfen başvuru formunu eksiksiz ve doğru bir şekilde doldurunuz.
-            </p>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+              <div>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-300">
+                  Ad
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.firstName ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.firstName && (
+                  <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>
+                )}
+              </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-300">
-                    Ad
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.firstName ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.firstName && (
-                    <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>
-                  )}
-                </div>
+              <div>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-300">
+                  Soyad
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.lastName ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.lastName && (
+                  <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>
+                )}
+              </div>
 
-                <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-300">
-                    Soyad
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.lastName ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.lastName && (
-                    <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>
-                  )}
-                </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+                  E-posta
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                )}
+              </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                    E-posta
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.email ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-red-400">{errors.email}</p>
-                  )}
-                </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-300">
+                  Telefon
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.phone ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-sm text-red-400">{errors.phone}</p>
+                )}
+              </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-300">
-                    Telefon
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.phone ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.phone && (
-                    <p className="mt-1 text-sm text-red-400">{errors.phone}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="birthDate" className="block text-sm font-medium text-gray-300">
-                    Doğum Tarihi
-                  </label>
-                  <input
-                    type="date"
-                    id="birthDate"
-                    name="birthDate"
-                    value={formData.birthDate}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.birthDate ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.birthDate && (
-                    <p className="mt-1 text-sm text-red-400">{errors.birthDate}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="postalCode" className="block text-sm font-medium text-gray-300">
-                    Posta Kodu
-                  </label>
-                  <input
-                    type="text"
-                    id="postalCode"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.postalCode ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.postalCode && (
-                    <p className="mt-1 text-sm text-red-400">{errors.postalCode}</p>
-                  )}
-                </div>
+              <div>
+                <label htmlFor="birthDate" className="block text-sm font-medium text-gray-300">
+                  Doğum Tarihi
+                </label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.birthDate ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.birthDate && (
+                  <p className="mt-1 text-sm text-red-400">{errors.birthDate}</p>
+                )}
               </div>
 
               <div>
@@ -260,62 +236,85 @@ export default function ApplyPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="city" className="block text-sm font-medium text-gray-300">
-                    Şehir
-                  </label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.city ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.city && (
-                    <p className="mt-1 text-sm text-red-400">{errors.city}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="province" className="block text-sm font-medium text-gray-300">
-                    İlçe
-                  </label>
-                  <input
-                    type="text"
-                    id="province"
-                    name="province"
-                    value={formData.province}
-                    onChange={handleChange}
-                    className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                      errors.province ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.province && (
-                    <p className="mt-1 text-sm text-red-400">{errors.province}</p>
-                  )}
-                </div>
+              <div>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-300">
+                  Şehir
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.city ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.city && (
+                  <p className="mt-1 text-sm text-red-400">{errors.city}</p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="education" className="block text-sm font-medium text-gray-300">
-                  Eğitim Bilgileri
+                <label htmlFor="country" className="block text-sm font-medium text-gray-300">
+                  Ülke
                 </label>
-                <textarea
-                  id="education"
-                  name="education"
-                  rows={3}
-                  value={formData.education}
+                <input
+                  type="text"
+                  id="country"
+                  name="country"
+                  value={formData.country}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                    errors.education ? 'border-red-500' : ''
+                    errors.country ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.education && (
-                  <p className="mt-1 text-sm text-red-400">{errors.education}</p>
+                {errors.country && (
+                  <p className="mt-1 text-sm text-red-400">{errors.country}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="postalCode" className="block text-sm font-medium text-gray-300">
+                  Posta Kodu
+                </label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.postalCode ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.postalCode && (
+                  <p className="mt-1 text-sm text-red-400">{errors.postalCode}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="educationLevel" className="block text-sm font-medium text-gray-300">
+                  Eğitim Seviyesi
+                </label>
+                <select
+                  id="educationLevel"
+                  name="educationLevel"
+                  value={formData.educationLevel}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.educationLevel ? 'border-red-500' : ''
+                  }`}
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="lise">Lise</option>
+                  <option value="onlisans">Ön Lisans</option>
+                  <option value="lisans">Lisans</option>
+                  <option value="yukseklisans">Yüksek Lisans</option>
+                  <option value="doktora">Doktora</option>
+                </select>
+                {errors.educationLevel && (
+                  <p className="mt-1 text-sm text-red-400">{errors.educationLevel}</p>
                 )}
               </div>
 
@@ -339,68 +338,137 @@ export default function ApplyPage() {
               </div>
 
               <div>
-                <label htmlFor="skills" className="block text-sm font-medium text-gray-300">
-                  Yetenekler
+                <label htmlFor="englishLevel" className="block text-sm font-medium text-gray-300">
+                  İngilizce Seviyesi
                 </label>
-                <textarea
-                  id="skills"
-                  name="skills"
-                  rows={3}
-                  value={formData.skills}
+                <select
+                  id="englishLevel"
+                  name="englishLevel"
+                  value={formData.englishLevel}
                   onChange={handleChange}
                   className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
-                    errors.skills ? 'border-red-500' : ''
+                    errors.englishLevel ? 'border-red-500' : ''
                   }`}
-                />
-                {errors.skills && (
-                  <p className="mt-1 text-sm text-red-400">{errors.skills}</p>
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="A1">A1 - Başlangıç</option>
+                  <option value="A2">A2 - Temel</option>
+                  <option value="B1">B1 - Orta</option>
+                  <option value="B2">B2 - Orta Üstü</option>
+                  <option value="C1">C1 - İleri</option>
+                  <option value="C2">C2 - Uzman</option>
+                </select>
+                {errors.englishLevel && (
+                  <p className="mt-1 text-sm text-red-400">{errors.englishLevel}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-300">
-                  Ek Bilgiler
+                <label htmlFor="frenchLevel" className="block text-sm font-medium text-gray-300">
+                  Fransızca Seviyesi
                 </label>
-                <textarea
-                  id="additionalInfo"
-                  name="additionalInfo"
-                  rows={3}
-                  value={formData.additionalInfo}
+                <select
+                  id="frenchLevel"
+                  name="frenchLevel"
+                  value={formData.frenchLevel}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3"
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.frenchLevel ? 'border-red-500' : ''
+                  }`}
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="A1">A1 - Başlangıç</option>
+                  <option value="A2">A2 - Temel</option>
+                  <option value="B1">B1 - Orta</option>
+                  <option value="B2">B2 - Orta Üstü</option>
+                  <option value="C1">C1 - İleri</option>
+                  <option value="C2">C2 - Uzman</option>
+                </select>
+                {errors.frenchLevel && (
+                  <p className="mt-1 text-sm text-red-400">{errors.frenchLevel}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="program" className="block text-sm font-medium text-gray-300">
+                  Program
+                </label>
+                <select
+                  id="program"
+                  name="program"
+                  value={formData.program}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.program ? 'border-red-500' : ''
+                  }`}
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="dil-egitimi">Dil Eğitimi</option>
+                  <option value="universite">Üniversite</option>
+                  <option value="yukseklisans">Yüksek Lisans</option>
+                  <option value="doktora">Doktora</option>
+                  <option value="staj">Staj</option>
+                </select>
+                {errors.program && (
+                  <p className="mt-1 text-sm text-red-400">{errors.program}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="startDate" className="block text-sm font-medium text-gray-300">
+                  Başlangıç Tarihi
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.startDate ? 'border-red-500' : ''
+                  }`}
                 />
+                {errors.startDate && (
+                  <p className="mt-1 text-sm text-red-400">{errors.startDate}</p>
+                )}
               </div>
 
-              {errors.submit && (
-                <div className="rounded-xl bg-red-500/10 p-4 border border-red-500/20">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-400">
-                        {errors.submit}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={() => router.back()}
-                  className="inline-flex items-center px-6 py-3 border border-white/10 text-sm font-medium rounded-xl text-white bg-white/5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-                >
-                  İptal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
-                </button>
+              <div>
+                <label htmlFor="budget" className="block text-sm font-medium text-gray-300">
+                  Bütçe (CAD)
+                </label>
+                <input
+                  type="number"
+                  id="budget"
+                  name="budget"
+                  value={formData.budget}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-xl bg-white/5 border border-white/10 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-base p-3 ${
+                    errors.budget ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.budget && (
+                  <p className="mt-1 text-sm text-red-400">{errors.budget}</p>
+                )}
               </div>
-            </form>
-          </div>
+            </div>
+
+            {errors.submit && (
+              <div className="rounded-md bg-red-500/10 p-4">
+                <p className="text-sm text-red-400">{errors.submit}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
+              </button>
+            </div>
+          </form>
         </motion.div>
       </div>
     </div>
