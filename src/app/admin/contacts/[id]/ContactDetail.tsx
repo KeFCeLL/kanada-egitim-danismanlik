@@ -13,8 +13,8 @@ interface Contact {
   subject: string;
   message: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }
 
 interface ContactDetailProps {
@@ -102,7 +102,7 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-300">Gönderim Tarihi</label>
             <div className="mt-1 text-white">
-              {new Date(contact.createdAt).toLocaleString('tr-TR')}
+              {new Date(contact.createdAt || '').toLocaleString('tr-TR')}
             </div>
           </div>
 
