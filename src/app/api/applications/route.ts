@@ -13,7 +13,7 @@ export async function GET() {
     
     return NextResponse.json(allApplications);
   } catch (error) {
-    console.error('Error fetching applications:', error);
+    console.error('Başvurular alınırken hata:', error);
     return NextResponse.json(
       { error: 'Başvurular alınırken bir hata oluştu' },
       { status: 500 }
@@ -79,32 +79,44 @@ export async function POST(request: Request) {
       );
     }
 
-    const newApplication = await db.insert(applications).values({
+    // NileDB için veri formatını düzenle
+    const applicationData = {
       id: nanoid(),
-      firstName: data.firstName,
-      lastName: data.lastName,
+      first_name: data.firstName,
+      last_name: data.lastName,
       email: data.email,
       phone: data.phone,
-      birthDate: data.birthDate,
+      birth_date: data.birthDate,
       address: data.address,
       city: data.city,
       country: data.country,
-      postalCode: data.postalCode,
-      educationLevel: data.educationLevel,
-      workExperience: data.workExperience || '',
-      englishLevel: data.englishLevel || '',
-      frenchLevel: data.frenchLevel || '',
+      postal_code: data.postalCode,
+      education_level: data.educationLevel,
+      work_experience: data.workExperience || '',
+      english_level: data.englishLevel || '',
+      french_level: data.frenchLevel || '',
       program: data.program,
-      startDate: data.startDate,
+      start_date: data.startDate,
       budget: String(data.budget),
-      status: 'pending'
-    }).returning();
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    console.log('Yeni başvuru oluşturuluyor:', applicationData);
+
+    const newApplication = await db.insert(applications).values(applicationData).returning();
+
+    console.log('Başvuru başarıyla oluşturuldu:', newApplication[0]);
 
     return NextResponse.json(newApplication[0]);
   } catch (error) {
-    console.error('Error creating application:', error);
+    console.error('Başvuru oluşturulurken hata:', error);
     return NextResponse.json(
-      { error: 'Başvuru oluşturulurken bir hata oluştu' },
+      { 
+        error: 'Başvuru oluşturulurken bir hata oluştu',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }
