@@ -79,28 +79,26 @@ export async function POST(request: Request) {
       );
     }
 
-    // NileDB için veri formatını düzenle
+    // Veritabanı şemasına uygun veri formatı
     const applicationData = {
       id: nanoid(),
-      first_name: data.firstName,
-      last_name: data.lastName,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phone: data.phone,
-      birth_date: data.birthDate,
+      birthDate: data.birthDate,
       address: data.address,
       city: data.city,
       country: data.country,
-      postal_code: data.postalCode,
-      education_level: data.educationLevel,
-      work_experience: data.workExperience || '',
-      english_level: data.englishLevel || '',
-      french_level: data.frenchLevel || '',
+      postalCode: data.postalCode,
+      educationLevel: data.educationLevel,
+      workExperience: data.workExperience || '',
+      englishLevel: data.englishLevel || '',
+      frenchLevel: data.frenchLevel || '',
       program: data.program,
-      start_date: data.startDate,
+      startDate: data.startDate,
       budget: String(data.budget),
-      status: 'pending',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      status: 'pending'
     };
 
     console.log('Yeni başvuru oluşturuluyor:', applicationData);
