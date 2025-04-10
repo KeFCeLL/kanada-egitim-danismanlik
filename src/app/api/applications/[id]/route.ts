@@ -47,13 +47,23 @@ export async function PATCH(
       );
     }
 
+    if (!['pending', 'reviewed', 'completed'].includes(status)) {
+      return NextResponse.json(
+        { error: 'Geçersiz durum değeri' },
+        { status: 400 }
+      );
+    }
+
     const updatedApplication = await db
       .update(applications)
-      .set({ status, updatedAt: new Date() })
+      .set({ 
+        status,
+        updatedAt: new Date().toISOString()
+      })
       .where(eq(applications.id, context.params.id))
       .returning();
 
-    if (!updatedApplication.length) {
+    if (!updatedApplication || updatedApplication.length === 0) {
       return NextResponse.json(
         { error: 'Başvuru bulunamadı' },
         { status: 404 }
