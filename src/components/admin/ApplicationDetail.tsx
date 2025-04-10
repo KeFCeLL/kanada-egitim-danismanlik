@@ -20,7 +20,7 @@ interface Application {
   workExperience: string;
   skills: string;
   additionalInfo?: string | null;
-  status: 'pending' | 'reviewed' | 'completed';
+  status: string;
   createdAt: string;
   updatedAt: string;
 }
