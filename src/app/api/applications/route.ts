@@ -71,6 +71,14 @@ export async function POST(request: Request) {
       );
     }
 
+    // Bütçe kontrolü
+    if (isNaN(Number(data.budget)) || Number(data.budget) <= 0) {
+      return NextResponse.json(
+        { error: 'Geçersiz bütçe değeri' },
+        { status: 400 }
+      );
+    }
+
     const newApplication = await db.insert(applications).values({
       id: nanoid(),
       firstName: data.firstName,
@@ -83,12 +91,12 @@ export async function POST(request: Request) {
       country: data.country,
       postalCode: data.postalCode,
       educationLevel: data.educationLevel,
-      workExperience: data.workExperience,
-      englishLevel: data.englishLevel,
-      frenchLevel: data.frenchLevel,
+      workExperience: data.workExperience || '',
+      englishLevel: data.englishLevel || '',
+      frenchLevel: data.frenchLevel || '',
       program: data.program,
       startDate: data.startDate,
-      budget: data.budget,
+      budget: Number(data.budget),
       status: 'pending'
     }).returning();
 
