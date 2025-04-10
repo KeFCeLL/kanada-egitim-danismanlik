@@ -25,9 +25,9 @@ export async function POST(request: Request) {
       title,
       page,
       content,
-      is_active: isActive ? 1 : 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      isActive: isActive ? 1 : 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }).returning();
 
     return NextResponse.json(newContent[0]);
@@ -47,8 +47,8 @@ export async function PUT(request: Request) {
         title,
         page,
         content,
-        is_active: isActive ? 1 : 0,
-        updated_at: new Date().toISOString(),
+        isActive: isActive ? 1 : 0,
+        updatedAt: new Date().toISOString(),
       })
       .where(eq(contentSections.id, id))
       .returning();
@@ -70,17 +70,10 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Content section ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const deletedContent = await db.delete(contentSections)
-      .where(eq(contentSections.id, id))
-      .returning();
-
-    if (!deletedContent.length) {
-      return NextResponse.json({ error: 'Content section not found' }, { status: 404 });
-    }
-
+    await db.delete(contentSections).where(eq(contentSections.id, id));
     return NextResponse.json({ message: 'Content section deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete content section' }, { status: 500 });
