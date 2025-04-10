@@ -7,13 +7,9 @@ type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
 
 export async function GET() {
   try {
-    const allApplications = await db
-      .select()
-      .from(applications)
-      .orderBy(desc(applications.createdAt));
+    const results = await db.select().from(applications).orderBy(desc(applications.createdAt));
     
-    // Format the applications data
-    const formattedApplications = allApplications.map(app => ({
+    const formattedApplications = results.map(app => ({
       id: app.id,
       firstName: app.firstName,
       lastName: app.lastName,
@@ -31,23 +27,16 @@ export async function GET() {
       program: app.program,
       startDate: app.startDate,
       budget: app.budget,
-      status: app.status as ApplicationStatus,
+      status: app.status,
       createdAt: app.createdAt,
       updatedAt: app.updatedAt
     }));
 
     return NextResponse.json(formattedApplications);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
-      { 
-        error: 'Başvurular alınırken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? {
-          message: error?.message,
-          stack: error?.stack,
-          code: error?.code
-        } : undefined
-      },
+      { error: 'Failed to fetch applications' },
       { status: 500 }
     );
   }
