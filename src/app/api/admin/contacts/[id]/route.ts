@@ -13,17 +13,14 @@ export async function GET(
     });
 
     if (!contact) {
-      return NextResponse.json(
-        { error: 'İletişim formu bulunamadı' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
     }
 
     return NextResponse.json(contact);
   } catch (error) {
-    console.error('Contact fetch error:', error);
+    console.error('Error fetching contact:', error);
     return NextResponse.json(
-      { error: 'İletişim formu yüklenirken bir hata oluştu' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -34,26 +31,24 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { status } = await request.json();
+    const body = await request.json();
+    const { status } = body;
 
-    const [updatedContact] = await db
+    const updatedContact = await db
       .update(contacts)
       .set({ status })
       .where(eq(contacts.id, params.id))
       .returning();
 
-    if (!updatedContact) {
-      return NextResponse.json(
-        { error: 'İletişim formu bulunamadı' },
-        { status: 404 }
-      );
+    if (!updatedContact.length) {
+      return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
     }
 
-    return NextResponse.json(updatedContact);
+    return NextResponse.json(updatedContact[0]);
   } catch (error) {
-    console.error('Contact update error:', error);
+    console.error('Error updating contact:', error);
     return NextResponse.json(
-      { error: 'İletişim formu güncellenirken bir hata oluştu' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

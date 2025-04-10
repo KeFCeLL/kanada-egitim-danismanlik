@@ -9,21 +9,18 @@ export async function GET(
 ) {
   try {
     const application = await db.query.applications.findFirst({
-      where: (applications, { eq }) => eq(applications.id, params.id),
+      where: eq(applications.id, params.id),
     });
 
     if (!application) {
-      return NextResponse.json(
-        { error: 'Başvuru bulunamadı' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
     }
 
     return NextResponse.json(application);
   } catch (error) {
     console.error('Error fetching application:', error);
     return NextResponse.json(
-      { error: 'Başvuru yüklenirken bir hata oluştu' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -34,29 +31,24 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { status } = await request.json();
+    const body = await request.json();
+    const { status } = body;
 
-    const application = await db.query.applications.findFirst({
-      where: (applications, { eq }) => eq(applications.id, params.id),
-    });
-
-    if (!application) {
-      return NextResponse.json(
-        { error: 'Başvuru bulunamadı' },
-        { status: 404 }
-      );
-    }
-
-    await db
+    const updatedApplication = await db
       .update(applications)
       .set({ status })
-      .where(eq(applications.id, params.id));
+      .where(eq(applications.id, params.id))
+      .returning();
 
-    return NextResponse.json({ ...application, status });
+    if (!updatedApplication.length) {
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(updatedApplication[0]);
   } catch (error) {
     console.error('Error updating application:', error);
     return NextResponse.json(
-      { error: 'Başvuru güncellenirken bir hata oluştu' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
