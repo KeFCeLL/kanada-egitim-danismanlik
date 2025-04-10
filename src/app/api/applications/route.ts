@@ -48,6 +48,7 @@ export async function POST(request: Request) {
   try {
     const isConnected = await testDatabaseConnection();
     if (!isConnected) {
+      console.error('Database connection failed');
       return NextResponse.json(
         { error: 'Veritabanı bağlantısı kurulamadı' },
         { status: 500 }
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
     }
 
     const data = await request.json();
-    console.log('Gelen veri:', data);
+    console.log('Received data:', data);
     
     // Veri doğrulama
     const requiredFields = [
@@ -76,6 +77,7 @@ export async function POST(request: Request) {
 
     const missingFields = requiredFields.filter(field => !data[field]);
     if (missingFields.length > 0) {
+      console.error('Missing required fields:', missingFields);
       return NextResponse.json(
         { 
           error: 'Eksik alanlar mevcut',
@@ -88,6 +90,7 @@ export async function POST(request: Request) {
     // E-posta formatı kontrolü
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
+      console.error('Invalid email format:', data.email);
       return NextResponse.json(
         { error: 'Geçersiz e-posta adresi' },
         { status: 400 }
@@ -97,6 +100,7 @@ export async function POST(request: Request) {
     // Telefon formatı kontrolü
     const phoneRegex = /^[0-9+\-\s()]{10,15}$/;
     if (!phoneRegex.test(data.phone)) {
+      console.error('Invalid phone format:', data.phone);
       return NextResponse.json(
         { error: 'Geçersiz telefon numarası' },
         { status: 400 }
@@ -105,6 +109,7 @@ export async function POST(request: Request) {
 
     // Bütçe kontrolü
     if (isNaN(Number(data.budget)) || Number(data.budget) <= 0) {
+      console.error('Invalid budget value:', data.budget);
       return NextResponse.json(
         { error: 'Geçersiz bütçe değeri' },
         { status: 400 }
@@ -129,32 +134,49 @@ export async function POST(request: Request) {
       frenchLevel: data.frenchLevel || '',
       program: data.program,
       startDate: data.startDate,
-      budget: data.budget,
+      budget: String(data.budget), // Convert to string as per schema
       status: 'pending',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
 
-    // Veritabanına kaydet
-    const result = await db.insert(applications).values(applicationData).returning();
-    
-    if (!result || result.length === 0) {
-      throw new Error('Başvuru kaydedilemedi');
-    }
+    console.log('Prepared application data:', applicationData);
 
-    return NextResponse.json(
-      { 
-        message: 'Başvuru başarıyla kaydedildi',
-        application: result[0]
-      },
-      { status: 201 }
-    );
+    // Veritabanına kaydet
+    try {
+      const result = await db.insert(applications).values(applicationData).returning();
+      console.log('Database insertion result:', result);
+      
+      if (!result || result.length === 0) {
+        throw new Error('Başvuru kaydedilemedi');
+      }
+
+      return NextResponse.json(
+        { 
+          message: 'Başvuru başarıyla kaydedildi',
+          application: result[0]
+        },
+        { status: 201 }
+      );
+    } catch (dbError: any) {
+      console.error('Database insertion error:', dbError);
+      throw dbError;
+    }
   } catch (error: any) {
-    console.error('Başvuru kaydedilirken hata:', error);
+    console.error('Application submission error:', error);
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      code: error?.code
+    });
     return NextResponse.json(
       { 
         error: 'Başvuru kaydedilirken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
+        details: process.env.NODE_ENV === 'development' ? {
+          message: error?.message,
+          stack: error?.stack,
+          code: error?.code
+        } : undefined
       },
       { status: 500 }
     );
