@@ -11,7 +11,7 @@ interface PageProps {
   }>;
 }
 
-export default function ApplicationDetailPage({ params }: PageProps) {
+export default async function ApplicationDetailPage({ params }: PageProps) {
   const { id } = use(params);
   
   const application = await db.query.applications.findFirst({
