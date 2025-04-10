@@ -33,11 +33,12 @@ export async function POST(request: Request) {
       'birthDate',
       'address',
       'city',
-      'province',
+      'country',
       'postalCode',
-      'education',
-      'workExperience',
-      'skills'
+      'educationLevel',
+      'program',
+      'startDate',
+      'budget'
     ];
 
     const missingFields = requiredFields.filter(field => !data[field]);
@@ -77,12 +78,15 @@ export async function POST(request: Request) {
       birthDate: data.birthDate,
       address: data.address,
       city: data.city,
-      province: data.province,
+      country: data.country,
       postalCode: data.postalCode,
-      education: data.education,
+      educationLevel: data.educationLevel,
       workExperience: data.workExperience,
-      skills: data.skills,
-      additionalInfo: data.additionalInfo,
+      englishLevel: data.englishLevel,
+      frenchLevel: data.frenchLevel,
+      program: data.program,
+      startDate: data.startDate,
+      budget: data.budget,
       status: 'pending'
     }).returning();
 
