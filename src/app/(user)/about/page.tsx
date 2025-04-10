@@ -164,7 +164,7 @@ export default function About() {
         <div className="rounded-2xl backdrop-blur-lg border border-white/10 overflow-hidden">
           <div className="relative p-8">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
-            <div className="absolute inset-0 backdrop-blur-sm bg-[url('/images/grid-pattern.png')] bg-repeat opacity-10"></div>
+            <div className="absolute inset-0 backdrop-blur-sm bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-10"></div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto relative z-10">
               <div className="text-center p-4">

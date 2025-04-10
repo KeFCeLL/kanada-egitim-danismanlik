@@ -13,7 +13,7 @@ export default function Home() {
           <div className="absolute w-96 h-96 rounded-full bg-purple-500/20 blur-3xl bottom-0 left-1/2 animate-pulse" style={{ animationDelay: '2s' }}></div>
           
           {/* Grid pattern overlay */}
-          <div className="absolute inset-0 bg-[url('/images/grid-pattern.png')] bg-repeat opacity-10"></div>
+          <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-10"></div>
           
           {/* Floating particles */}
           <div className="absolute inset-0">
