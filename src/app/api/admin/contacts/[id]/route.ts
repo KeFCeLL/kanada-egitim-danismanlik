@@ -3,13 +3,19 @@ import { db } from '@/lib/db';
 import { contacts } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: Props
 ) {
   try {
     const contact = await db.query.contacts.findFirst({
-      where: eq(contacts.id, params.id),
+      where: eq(contacts.id, props.params.id),
     });
 
     if (!contact) {
@@ -28,7 +34,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: Props
 ) {
   try {
     const body = await request.json();
@@ -37,7 +43,7 @@ export async function PUT(
     const updatedContact = await db
       .update(contacts)
       .set({ status })
-      .where(eq(contacts.id, params.id))
+      .where(eq(contacts.id, props.params.id))
       .returning();
 
     if (!updatedContact.length) {
