@@ -111,7 +111,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Veritabanı şemasına uygun veri formatı
+    // Başvuru verilerini hazırla
     const applicationData = {
       id: nanoid(),
       firstName: data.firstName,
@@ -129,27 +129,32 @@ export async function POST(request: Request) {
       frenchLevel: data.frenchLevel || '',
       program: data.program,
       startDate: data.startDate,
-      budget: String(data.budget),
-      status: 'pending'
+      budget: data.budget,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
 
-    console.log('Veritabanına gönderilecek veri:', applicationData);
+    // Veritabanına kaydet
+    const result = await db.insert(applications).values(applicationData).returning();
+    
+    if (!result || result.length === 0) {
+      throw new Error('Başvuru kaydedilemedi');
+    }
 
-    const newApplication = await db.insert(applications).values(applicationData).returning();
-
-    console.log('Başvuru başarıyla oluşturuldu:', newApplication[0]);
-
-    return NextResponse.json(newApplication[0]);
-  } catch (error: any) {
-    console.error('Başvuru oluşturulurken hata:', error);
     return NextResponse.json(
       { 
-        error: 'Başvuru oluşturulurken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? {
-          message: error?.message,
-          stack: error?.stack,
-          code: error?.code
-        } : undefined
+        message: 'Başvuru başarıyla kaydedildi',
+        application: result[0]
+      },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error('Başvuru kaydedilirken hata:', error);
+    return NextResponse.json(
+      { 
+        error: 'Başvuru kaydedilirken bir hata oluştu',
+        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
       },
       { status: 500 }
     );
