@@ -3,19 +3,42 @@ import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
+import { sql } from 'drizzle-orm';
+
+// Veritabanı bağlantısını test et
+async function testDatabaseConnection() {
+  try {
+    await db.execute(sql`SELECT 1`);
+    return true;
+  } catch (error) {
+    console.error('Veritabanı bağlantı hatası:', error);
+    return false;
+  }
+}
 
 export async function GET() {
   try {
+    const isConnected = await testDatabaseConnection();
+    if (!isConnected) {
+      return NextResponse.json(
+        { error: 'Veritabanı bağlantısı kurulamadı' },
+        { status: 500 }
+      );
+    }
+
     const allApplications = await db
       .select()
       .from(applications)
       .orderBy(desc(applications.createdAt));
     
     return NextResponse.json(allApplications);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Başvurular alınırken hata:', error);
     return NextResponse.json(
-      { error: 'Başvurular alınırken bir hata oluştu' },
+      { 
+        error: 'Başvurular alınırken bir hata oluştu',
+        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
+      },
       { status: 500 }
     );
   }
@@ -23,7 +46,16 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const isConnected = await testDatabaseConnection();
+    if (!isConnected) {
+      return NextResponse.json(
+        { error: 'Veritabanı bağlantısı kurulamadı' },
+        { status: 500 }
+      );
+    }
+
     const data = await request.json();
+    console.log('Gelen veri:', data);
     
     // Veri doğrulama
     const requiredFields = [
@@ -101,7 +133,7 @@ export async function POST(request: Request) {
       status: 'pending'
     };
 
-    console.log('Yeni başvuru oluşturuluyor:', applicationData);
+    console.log('Veritabanına gönderilecek veri:', applicationData);
 
     const newApplication = await db.insert(applications).values(applicationData).returning();
 
@@ -113,7 +145,11 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { 
         error: 'Başvuru oluşturulurken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
+        details: process.env.NODE_ENV === 'development' ? {
+          message: error?.message,
+          stack: error?.stack,
+          code: error?.code
+        } : undefined
       },
       { status: 500 }
     );
