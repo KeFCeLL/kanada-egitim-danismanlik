@@ -3,13 +3,19 @@ import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
+type RouteHandlerContext = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteHandlerContext
 ) {
   try {
     const application = await db.query.applications.findFirst({
-      where: eq(applications.id, params.id),
+      where: eq(applications.id, context.params.id),
     });
 
     if (!application) {
@@ -28,7 +34,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteHandlerContext
 ) {
   try {
     const body = await request.json();
@@ -37,7 +43,7 @@ export async function PUT(
     const updatedApplication = await db
       .update(applications)
       .set({ status })
-      .where(eq(applications.id, params.id))
+      .where(eq(applications.id, context.params.id))
       .returning();
 
     if (!updatedApplication.length) {
