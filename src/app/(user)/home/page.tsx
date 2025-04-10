@@ -93,8 +93,8 @@ export default function Home() {
                 <div className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-indigo-800 to-purple-800 shadow-2xl border border-white/10">
                   <iframe
                     className="w-full h-full"
-                    src="https://www.youtube.com/embed/iTi9CMJYKS8?autoplay=0&controls=1&rel=0"
-                    title="Study in Canada - Complete Guide"
+                    src="https://www.youtube.com/embed/cOMB15Y8f9U?autoplay=0&controls=1&rel=0"
+                    title="Kanada Kolay Vize"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>

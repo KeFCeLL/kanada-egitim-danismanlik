@@ -1,0 +1,93 @@
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { applications } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+
+export async function GET() {
+  try {
+    const allApplications = await db.select().from(applications).orderBy(applications.created_at);
+    return NextResponse.json(allApplications);
+  } catch (error) {
+    console.error('Error fetching applications:', error);
+    return NextResponse.json(
+      { error: 'Başvurular yüklenirken bir hata oluştu' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const data = await request.json();
+    
+    // Veri doğrulama
+    const requiredFields = [
+      'firstName',
+      'lastName',
+      'email',
+      'phone',
+      'birthDate',
+      'address',
+      'city',
+      'province',
+      'postalCode',
+      'education',
+      'workExperience',
+      'skills'
+    ];
+
+    const missingFields = requiredFields.filter(field => !data[field]);
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { 
+          error: 'Eksik alanlar mevcut',
+          fields: missingFields 
+        },
+        { status: 400 }
+      );
+    }
+
+    // E-posta formatı kontrolü
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      return NextResponse.json(
+        { error: 'Geçersiz e-posta adresi' },
+        { status: 400 }
+      );
+    }
+
+    // Telefon formatı kontrolü
+    const phoneRegex = /^[0-9+\-\s()]{10,15}$/;
+    if (!phoneRegex.test(data.phone)) {
+      return NextResponse.json(
+        { error: 'Geçersiz telefon numarası' },
+        { status: 400 }
+      );
+    }
+
+    const newApplication = await db.insert(applications).values({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      birthDate: data.birthDate,
+      address: data.address,
+      city: data.city,
+      province: data.province,
+      postalCode: data.postalCode,
+      education: data.education,
+      workExperience: data.workExperience,
+      skills: data.skills,
+      additionalInfo: data.additionalInfo,
+      status: 'pending'
+    }).returning();
+
+    return NextResponse.json(newApplication[0]);
+  } catch (error) {
+    console.error('Error creating application:', error);
+    return NextResponse.json(
+      { error: 'Başvuru oluşturulurken bir hata oluştu' },
+      { status: 500 }
+    );
+  }
+} 

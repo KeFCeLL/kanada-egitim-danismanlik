@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { getCookie, deleteCookie } from 'cookies-next';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -15,13 +16,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   useEffect(() => {
     // Check authentication on mount and route changes
-    const auth = localStorage.getItem('adminAuth');
+    const auth = getCookie('adminAuth') === 'true';
     if (!auth && pathname !== '/admin/login') {
       router.push('/admin/login');
     } else if (auth && pathname === '/admin/login') {
       router.push('/admin/dashboard');
     } else {
-      setIsAuthenticated(!!auth);
+      setIsAuthenticated(auth);
     }
   }, [pathname, router]);
 
@@ -40,10 +41,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: '/admin/dialogs', label: 'Diyalog Yönetimi', icon: '💬' },
     { href: '/admin/forms', label: 'Form Yönetimi', icon: '📝' },
     { href: '/admin/content', label: 'İçerik Yönetimi', icon: '📄' },
+    { href: '/admin/applications', label: 'Başvurular', icon: '📋' },
+    { href: '/admin/contacts', label: 'İletişim Formları', icon: '✉️' },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('adminAuth');
+    deleteCookie('adminAuth');
     router.push('/admin/login');
   };
 

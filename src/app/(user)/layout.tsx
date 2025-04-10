@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface UserLayoutProps {
   children: ReactNode;
@@ -8,23 +9,29 @@ interface UserLayoutProps {
 export default function UserLayout({ children }: UserLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-white shadow-md">
+      <header className="bg-[#DC2626]">
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center justify-between">
             <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-blue-600">
-                CanadaEdu
+              <Link href="/" className="relative w-[300px] h-[50px]">
+                <Image
+                  src="/logo.svg"
+                  alt="Kanada Kolay Vize"
+                  fill
+                  style={{ objectFit: 'contain' }}
+                  priority
+                />
               </Link>
             </div>
             <div className="hidden md:flex space-x-6">
-              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/" className="text-white hover:text-gray-200 font-medium">
                 Anasayfa
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/about" className="text-white hover:text-gray-200 font-medium">
                 Hakkımızda
               </Link>
               <div className="relative group">
-                <Link href="/services" className="text-gray-700 hover:text-blue-600 font-medium">
+                <Link href="/services" className="text-white hover:text-gray-200 font-medium">
                   Hizmetler
                 </Link>
                 <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md hidden group-hover:block z-50">
@@ -42,26 +49,26 @@ export default function UserLayout({ children }: UserLayoutProps) {
                   </Link>
                 </div>
               </div>
-              <Link href="/apply" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/apply" className="text-white hover:text-gray-200 font-medium">
                 Başvuru
               </Link>
-              <Link href="/faq" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/faq" className="text-white hover:text-gray-200 font-medium">
                 SSS
               </Link>
-              <Link href="/blog" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/blog" className="text-white hover:text-gray-200 font-medium">
                 Blog
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href="/contact" className="text-white hover:text-gray-200 font-medium">
                 İletişim
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-blue-600 hover:text-blue-800 font-medium">
+              <Link href="/login" className="text-white hover:text-gray-200 font-medium">
                 Giriş Yap
               </Link>
               <Link 
                 href="/apply" 
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                className="bg-white text-[#DC2626] px-4 py-2 rounded-md hover:bg-gray-100 transition-colors"
               >
                 Hemen Başvur
               </Link>
