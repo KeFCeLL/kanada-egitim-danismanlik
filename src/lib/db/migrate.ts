@@ -4,7 +4,7 @@ import * as schema from './schema';
 async function migrate() {
   try {
     // Create dialogs table
-    await db.run(`
+    await db.execute(`
       CREATE TABLE IF NOT EXISTS dialogs (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -20,7 +20,7 @@ async function migrate() {
     `);
 
     // Create forms table
-    await db.run(`
+    await db.execute(`
       CREATE TABLE IF NOT EXISTS forms (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -33,7 +33,7 @@ async function migrate() {
     `);
 
     // Create form_fields table
-    await db.run(`
+    await db.execute(`
       CREATE TABLE IF NOT EXISTS form_fields (
         id TEXT PRIMARY KEY,
         form_id TEXT NOT NULL,
@@ -50,7 +50,7 @@ async function migrate() {
     `);
 
     // Create content_sections table
-    await db.run(`
+    await db.execute(`
       CREATE TABLE IF NOT EXISTS content_sections (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -63,7 +63,7 @@ async function migrate() {
     `);
 
     // Create applications table
-    await db.run(`
+    await db.execute(`
       CREATE TABLE IF NOT EXISTS applications (
         id TEXT PRIMARY KEY,
         first_name TEXT NOT NULL,
@@ -73,20 +73,23 @@ async function migrate() {
         birth_date TEXT NOT NULL,
         address TEXT NOT NULL,
         city TEXT NOT NULL,
-        province TEXT NOT NULL,
+        country TEXT NOT NULL,
         postal_code TEXT NOT NULL,
-        education TEXT NOT NULL,
-        work_experience TEXT NOT NULL,
-        skills TEXT NOT NULL,
-        additional_info TEXT,
+        education_level TEXT NOT NULL,
+        work_experience TEXT,
+        english_level TEXT,
+        french_level TEXT,
+        program TEXT NOT NULL,
+        start_date TEXT NOT NULL,
+        budget TEXT NOT NULL,
         status TEXT NOT NULL DEFAULT 'pending',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
     // Create contacts table
-    await db.run(`
+    await db.execute(`
       CREATE TABLE IF NOT EXISTS contacts (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -95,15 +98,16 @@ async function migrate() {
         subject TEXT NOT NULL,
         message TEXT NOT NULL,
         status TEXT NOT NULL DEFAULT 'pending',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
     console.log('Migration completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);
+    throw error;
   }
 }
 
-migrate(); 
+export default migrate; 
