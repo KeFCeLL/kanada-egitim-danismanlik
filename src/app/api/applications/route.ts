@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
 
 export async function GET() {
   try {
@@ -71,6 +72,7 @@ export async function POST(request: Request) {
     }
 
     const newApplication = await db.insert(applications).values({
+      id: nanoid(),
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
