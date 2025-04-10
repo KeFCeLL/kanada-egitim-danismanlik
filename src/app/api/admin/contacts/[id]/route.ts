@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { contacts } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     const contact = await db.query.contacts.findFirst({
-      where: eq(contacts.id, context.params.id),
+      where: eq(contacts.id, params.id),
     });
 
     if (!contact) {
@@ -27,8 +27,8 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     const body = await request.json();
@@ -37,7 +37,7 @@ export async function PUT(
     const updatedContact = await db
       .update(contacts)
       .set({ status })
-      .where(eq(contacts.id, context.params.id))
+      .where(eq(contacts.id, params.id))
       .returning();
 
     if (!updatedContact.length) {
