@@ -156,7 +156,7 @@ export default function ApplyPage() {
                     value={formData.firstName}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     placeholder="Adınız"
                   />
                 </div>
@@ -168,7 +168,7 @@ export default function ApplyPage() {
                     value={formData.lastName}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     placeholder="Soyadınız"
                   />
                 </div>
@@ -184,7 +184,7 @@ export default function ApplyPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     placeholder="E-posta adresiniz"
                   />
                 </div>
@@ -197,7 +197,7 @@ export default function ApplyPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     placeholder="Telefon numaranız"
                   />
                 </div>
@@ -213,7 +213,7 @@ export default function ApplyPage() {
                     value={formData.birthDate}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -224,7 +224,7 @@ export default function ApplyPage() {
                     value={formData.nationality}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     placeholder="Uyruğunuz"
                   />
                 </div>
@@ -238,7 +238,7 @@ export default function ApplyPage() {
                   value={formData.currentCountry}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   placeholder="Şu anda yaşadığınız ülke"
                 />
               </div>
@@ -252,9 +252,9 @@ export default function ApplyPage() {
                     value={formData.educationLevel}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   >
-                    <option value="">Seçiniz</option>
+                    <option value="" className="bg-gray-900 text-white">Seçiniz</option>
                     {educationLevels.map(level => (
                       <option key={level.value} value={level.value} className="bg-gray-900 text-white">
                         {level.label}
@@ -270,9 +270,9 @@ export default function ApplyPage() {
                     value={formData.englishLevel}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   >
-                    <option value="">Seçiniz</option>
+                    <option value="" className="bg-gray-900 text-white">Seçiniz</option>
                     {languageLevels.map(level => (
                       <option key={level.value} value={level.value} className="bg-gray-900 text-white">
                         {level.label}
@@ -288,9 +288,9 @@ export default function ApplyPage() {
                     value={formData.frenchLevel}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   >
-                    <option value="">Seçiniz</option>
+                    <option value="" className="bg-gray-900 text-white">Seçiniz</option>
                     {languageLevels.map(level => (
                       <option key={level.value} value={level.value} className="bg-gray-900 text-white">
                         {level.label}
@@ -309,9 +309,9 @@ export default function ApplyPage() {
                     value={formData.programType}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   >
-                    <option value="">Seçiniz</option>
+                    <option value="" className="bg-gray-900 text-white">Seçiniz</option>
                     {programTypes.map(type => (
                       <option key={type.value} value={type.value} className="bg-gray-900 text-white">
                         {type.label}
@@ -327,9 +327,9 @@ export default function ApplyPage() {
                     value={formData.programDuration}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   >
-                    <option value="">Seçiniz</option>
+                    <option value="" className="bg-gray-900 text-white">Seçiniz</option>
                     {programDurations.map(duration => (
                       <option key={duration.value} value={duration.value} className="bg-gray-900 text-white">
                         {duration.label}
@@ -349,7 +349,7 @@ export default function ApplyPage() {
                     value={formData.startDate}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -362,7 +362,7 @@ export default function ApplyPage() {
                     value={formData.budget}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     placeholder="Bütçeniz"
                   />
                 </div>
@@ -375,7 +375,7 @@ export default function ApplyPage() {
                   name="notes"
                   value={formData.notes}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   placeholder="Eklemek istediğiniz notlar"
                   rows={4}
                 />
