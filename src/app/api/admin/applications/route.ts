@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 
+export const dynamic = 'force-dynamic';
+
 // Test database connection
 async function testDatabaseConnection() {
   try {
@@ -15,15 +17,12 @@ async function testDatabaseConnection() {
 export async function GET(request: NextRequest) {
   try {
     // Test database connection first
-    const isConnected = await testDatabaseConnection();
-    if (!isConnected) {
-      return NextResponse.json(
-        { error: 'Database connection failed' },
-        { status: 500 }
-      );
+    const connectionTest = await sql`SELECT 1`;
+    if (!connectionTest) {
+      throw new Error('Database connection failed');
     }
 
-    // Get applications
+    // Get applications with proper column mapping
     const result = await sql`
       SELECT 
         id,
@@ -53,7 +52,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
@@ -153,7 +155,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating application:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
