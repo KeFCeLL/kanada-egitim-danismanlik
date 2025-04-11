@@ -88,247 +88,217 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8"
-      >
-        <h1 className="text-4xl font-extrabold text-center mb-10 text-gray-800">Kanada Eğitim Başvuru Formu</h1>
-        
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <Label htmlFor="firstName" className="text-lg font-semibold">Ad</Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-            <div>
-              <Label htmlFor="lastName" className="text-lg font-semibold">Soyad</Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white py-16">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden rounded-3xl backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-10"
+        >
+          <div className="absolute -left-32 -bottom-32 w-64 h-64 bg-blue-600/20 rounded-full filter blur-3xl"></div>
+          <div className="absolute -right-32 -top-32 w-64 h-64 bg-purple-600/20 rounded-full filter blur-3xl"></div>
+          
+          <div className="relative z-10">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Başvuru Formu</h1>
+            <p className="text-xl mb-10 text-gray-300">
+              Lütfen aşağıdaki formu doldurun.
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <Label htmlFor="email" className="text-lg font-semibold">E-posta</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone" className="text-lg font-semibold">Telefon</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-          </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">Ad</Label>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Adınız"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">Soyad</Label>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Soyadınız"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <Label htmlFor="birthDate" className="text-lg font-semibold">Doğum Tarihi</Label>
-            <Input
-              id="birthDate"
-              name="birthDate"
-              type="date"
-              value={formData.birthDate}
-              onChange={handleChange}
-              required
-              className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-            />
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">E-posta</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="E-posta adresiniz"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">Telefon</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Telefon numaranız"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <Label htmlFor="address" className="text-lg font-semibold">Adres</Label>
-            <Textarea
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-            />
-          </div>
+              <div>
+                <Label htmlFor="birthDate" className="block text-sm font-medium text-gray-300 mb-2">Doğum Tarihi</Label>
+                <Input
+                  id="birthDate"
+                  name="birthDate"
+                  type="date"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <Label htmlFor="city" className="text-lg font-semibold">Şehir</Label>
-              <Input
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-            <div>
-              <Label htmlFor="country" className="text-lg font-semibold">Ülke</Label>
-              <Input
-                id="country"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-            <div>
-              <Label htmlFor="postalCode" className="text-lg font-semibold">Posta Kodu</Label>
-              <Input
-                id="postalCode"
-                name="postalCode"
-                value={formData.postalCode}
-                onChange={handleChange}
-                required
-                className="mt-2 p-3 border border-gray-300 rounded-md w-full"
-              />
-            </div>
-          </div>
+              <div>
+                <Label htmlFor="address" className="block text-sm font-medium text-gray-300 mb-2">Adres</Label>
+                <Textarea
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  placeholder="Adresiniz"
+                />
+              </div>
 
-          <div>
-            <Label htmlFor="educationLevel">Eğitim Seviyesi</Label>
-            <Select
-              id="educationLevel"
-              name="educationLevel"
-              value={formData.educationLevel}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Seçiniz</option>
-              {educationLevels.map(level => (
-                <option key={level.value} value={level.value}>
-                  {level.label}
-                </option>
-              ))}
-            </Select>
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <Label htmlFor="city" className="block text-sm font-medium text-gray-300 mb-2">Şehir</Label>
+                  <Input
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Şehir"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="country" className="block text-sm font-medium text-gray-300 mb-2">Ülke</Label>
+                  <Input
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Ülke"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="postalCode" className="block text-sm font-medium text-gray-300 mb-2">Posta Kodu</Label>
+                  <Input
+                    id="postalCode"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Posta Kodu"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <Label htmlFor="workExperience">İş Deneyimi</Label>
-            <Textarea
-              id="workExperience"
-              name="workExperience"
-              value={formData.workExperience}
-              onChange={handleChange}
-            />
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="educationLevel" className="block text-sm font-medium text-gray-300 mb-2">Eğitim Seviyesi</Label>
+                  <Select
+                    id="educationLevel"
+                    name="educationLevel"
+                    value={formData.educationLevel}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    <option value="">Seçiniz</option>
+                    {educationLevels.map(level => (
+                      <option key={level.value} value={level.value} className="bg-gray-900 text-white">
+                        {level.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="workExperience" className="block text-sm font-medium text-gray-300 mb-2">İş Deneyimi</Label>
+                  <Textarea
+                    id="workExperience"
+                    name="workExperience"
+                    value={formData.workExperience}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="İş deneyiminiz"
+                  />
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="englishLevel">İngilizce Seviyesi</Label>
-              <Select
-                id="englishLevel"
-                name="englishLevel"
-                value={formData.englishLevel}
-                onChange={handleChange}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="startDate" className="block text-sm font-medium text-gray-300 mb-2">Başlangıç Tarihi</Label>
+                  <Input
+                    id="startDate"
+                    name="startDate"
+                    type="date"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="budget" className="block text-sm font-medium text-gray-300 mb-2">Bütçe (CAD)</Label>
+                  <Input
+                    id="budget"
+                    name="budget"
+                    type="number"
+                    min="0"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Bütçeniz"
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 mt-6 bg-cyan-600 text-white font-bold rounded-md hover:bg-cyan-700 transition duration-300"
               >
-                <option value="">Seçiniz</option>
-                {languageLevels.map(level => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="frenchLevel">Fransızca Seviyesi</Label>
-              <Select
-                id="frenchLevel"
-                name="frenchLevel"
-                value={formData.frenchLevel}
-                onChange={handleChange}
-              >
-                <option value="">Seçiniz</option>
-                {languageLevels.map(level => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </Select>
-            </div>
+                {isSubmitting ? 'Gönderiliyor...' : 'Başvur'}
+              </Button>
+            </form>
           </div>
-
-          <div>
-            <Label htmlFor="program">Program</Label>
-            <Select
-              id="program"
-              name="program"
-              value={formData.program}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Seçiniz</option>
-              {programs.map(program => (
-                <option key={program.value} value={program.value}>
-                  {program.label}
-                </option>
-              ))}
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="startDate">Başlangıç Tarihi</Label>
-              <Input
-                id="startDate"
-                name="startDate"
-                type="date"
-                value={formData.startDate}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="budget">Bütçe (CAD)</Label>
-              <Input
-                id="budget"
-                name="budget"
-                type="number"
-                min="0"
-                value={formData.budget}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 mt-6 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition duration-300"
-            >
-              {isSubmitting ? 'Gönderiliyor...' : 'Başvur'}
-            </Button>
-          </div>
-        </form>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 } 
