@@ -38,9 +38,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/admin/users', label: 'Kullanıcılar', icon: '👥' },
     { href: '/admin/sliders', label: 'Slider Yönetimi', icon: '🖼️' },
-    { href: '/admin/dialogs', label: 'Diyalog Yönetimi', icon: '💬' },
-    { href: '/admin/forms', label: 'Form Yönetimi', icon: '📝' },
-    { href: '/admin/content', label: 'İçerik Yönetimi', icon: '📄' },
     { href: '/admin/applications', label: 'Başvurular', icon: '📋' },
     { href: '/admin/contacts', label: 'İletişim Formları', icon: '✉️' },
   ];

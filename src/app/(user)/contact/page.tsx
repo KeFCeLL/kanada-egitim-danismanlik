@@ -126,7 +126,7 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-white mb-6">Bizi Ziyaret Edin</h2>
               <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12765.123456789!2d30.123456789!3d36.123456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzbCsDA3JzI0LjQiTiAzMMKwMDcnMjQuNCJF!5e0!3m2!1str!2str!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3190.5335631985!2d30.693719376344282!3d36.88739297169308!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14c39003b2c4cb8d%3A0x172247a7c2d97282!2sTah%C4%B1lpazar%C4%B1%2C%20%C3%87atal%20K%C3%B6pr%C3%BC%20Cd.%20No%3A38%2C%2007100%20Muratpa%C5%9Fa%2FAntalya!5e0!3m2!1str!2str!4v1717347538144!5m2!1str!2str"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
