@@ -1,15 +1,17 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
+import { sql } from '@/lib/db';
 import { contacts } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
-    const allContacts = await db
-      .select()
-      .from(contacts)
-      .orderBy(desc(contacts.createdAt));
+    const allContacts = await sql`
+      SELECT * FROM ${contacts}
+      ORDER BY ${contacts.createdAt} DESC
+    `;
     
     return NextResponse.json(allContacts);
   } catch (error) {
@@ -21,57 +23,86 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
-    
-    // Veri doğrulama
-    const requiredFields = ['name', 'email', 'phone', 'subject', 'message'];
-    const missingFields = requiredFields.filter(field => !data[field]);
-    
-    if (missingFields.length > 0) {
+    const body = await request.json();
+    const { name, email, phone, subject, message } = body;
+
+    // Validate required fields
+    if (!name || !email || !subject || !message) {
       return NextResponse.json(
-        { 
-          error: 'Eksik alanlar mevcut',
-          fields: missingFields 
-        },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // E-posta formatı kontrolü
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
+    if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'Geçersiz e-posta adresi' },
+        { error: 'Invalid email format' },
         { status: 400 }
       );
     }
 
-    // Telefon formatı kontrolü
-    const phoneRegex = /^[0-9+\-\s()]{10,15}$/;
-    if (!phoneRegex.test(data.phone)) {
+    // Validate phone format if provided
+    if (phone) {
+      const phoneRegex = /^\+?[\d\s-]{10,}$/;
+      if (!phoneRegex.test(phone)) {
+        return NextResponse.json(
+          { error: 'Invalid phone format' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // First check if the contacts table exists
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'contacts'
+      )
+    `;
+
+    if (!tableExists[0].exists) {
       return NextResponse.json(
-        { error: 'Geçersiz telefon numarası' },
-        { status: 400 }
+        { error: 'Contacts table does not exist' },
+        { status: 500 }
       );
     }
 
-    const newContact = await db.insert(contacts).values({
-      id: nanoid(),
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      subject: data.subject,
-      message: data.message,
-      status: 'pending'
-    }).returning();
+    const result = await sql`
+      INSERT INTO contacts (
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        status,
+        created_at,
+        updated_at
+      ) VALUES (
+        ${name},
+        ${email},
+        ${phone || null},
+        ${subject},
+        ${message},
+        'pending',
+        NOW(),
+        NOW()
+      )
+      RETURNING *
+    `;
 
-    return NextResponse.json(newContact[0]);
+    return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
     console.error('Error creating contact:', error);
     return NextResponse.json(
-      { error: 'İletişim formu oluşturulurken bir hata oluştu' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      },
       { status: 500 }
     );
   }

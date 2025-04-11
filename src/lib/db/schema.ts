@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { text, integer, pgTable } from 'drizzle-orm/pg-core';
+import { text, integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 export const dialogs = pgTable('dialogs', {
   id: text('id').primaryKey(),
@@ -70,13 +70,13 @@ export const applications = pgTable('applications', {
 });
 
 export const contacts = pgTable('contacts', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull(),
-  phone: text('phone').notNull(),
-  subject: text('subject').notNull(),
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 20 }),
+  subject: varchar('subject', { length: 255 }).notNull(),
   message: text('message').notNull(),
-  status: text('status').notNull().default('pending'),
-  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+  status: varchar('status', { length: 20 }).default('pending').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
 }); 
