@@ -170,13 +170,14 @@ export async function POST(request: NextRequest) {
       RETURNING *
     `;
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
     console.error('Error creating application:', error);
     return NextResponse.json(
       { 
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
       },
       { status: 500 }
     );
