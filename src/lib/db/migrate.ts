@@ -2,6 +2,9 @@ import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
+import { sql } from '@/lib/db';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 const connectionString = process.env.kanada_POSTGRES_URL;
 if (!connectionString) {
@@ -21,51 +24,40 @@ const pool = postgres(connectionString, {
 
 const db = drizzle(pool, { schema });
 
-async function main() {
+async function migrate() {
   try {
     // Test database connection
-    await pool`SELECT 1`;
+    await sql`SELECT 1`;
     console.log('Database connection successful');
 
-    // Drop applications table if exists
-    await pool`
-      DROP TABLE IF EXISTS applications;
-    `;
+    // Drop existing tables if they exist
+    await sql`DROP TABLE IF EXISTS applications CASCADE`;
     console.log('Applications table dropped');
 
-    // Create applications table
-    await pool`
-      CREATE TABLE IF NOT EXISTS applications (
-        id SERIAL PRIMARY KEY,
-        first_name VARCHAR(255) NOT NULL,
-        last_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        phone VARCHAR(255) NOT NULL,
-        birth_date DATE NOT NULL,
-        nationality VARCHAR(255) NOT NULL,
-        current_country VARCHAR(255) NOT NULL,
-        education_level VARCHAR(255) NOT NULL,
-        english_level VARCHAR(255) NOT NULL,
-        french_level VARCHAR(255) NOT NULL,
-        program_type VARCHAR(255) NOT NULL,
-        program_duration VARCHAR(255) NOT NULL,
-        start_date DATE NOT NULL,
-        budget VARCHAR(255) NOT NULL,
-        notes TEXT,
-        status VARCHAR(255) NOT NULL DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
+    await sql`DROP TABLE IF EXISTS contacts CASCADE`;
+    console.log('Contacts table dropped');
+
+    // Read and execute migrations
+    const applicationsSQL = readFileSync(
+      join(process.cwd(), 'src', 'lib', 'db', 'migrations', '0001_create_applications_table.sql'),
+      'utf-8'
+    );
+    await sql.unsafe(applicationsSQL);
     console.log('Applications table created successfully');
 
-    // Close the connection
-    await pool.end();
+    const contactsSQL = readFileSync(
+      join(process.cwd(), 'src', 'lib', 'db', 'migrations', '0002_create_contacts_table.sql'),
+      'utf-8'
+    );
+    await sql.unsafe(contactsSQL);
+    console.log('Contacts table created successfully');
+
     console.log('Migration completed successfully');
+    process.exit(0);
   } catch (error) {
     console.error('Migration failed:', error);
     process.exit(1);
   }
 }
 
-main(); 
+migrate(); 
