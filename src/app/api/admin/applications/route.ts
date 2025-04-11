@@ -1,10 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 
+// Test database connection
+async function testDatabaseConnection() {
+  try {
+    await sql`SELECT 1`;
+    return true;
+  } catch (error) {
+    console.error('Database connection error:', error);
+    return false;
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
+    // Test database connection first
+    const isConnected = await testDatabaseConnection();
+    if (!isConnected) {
+      return NextResponse.json(
+        { error: 'Database connection failed' },
+        { status: 500 }
+      );
+    }
+
+    // Get applications
     const result = await sql`
-      SELECT * FROM applications
+      SELECT 
+        id,
+        first_name as "firstName",
+        last_name as "lastName",
+        email,
+        phone,
+        birth_date as "birthDate",
+        nationality,
+        current_country as "currentCountry",
+        education_level as "educationLevel",
+        english_level as "englishLevel",
+        french_level as "frenchLevel",
+        program_type as "programType",
+        program_duration as "programDuration",
+        start_date as "startDate",
+        budget,
+        notes,
+        status,
+        created_at as "createdAt",
+        updated_at as "updatedAt"
+      FROM applications
       ORDER BY created_at DESC
     `;
 
@@ -12,7 +53,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
@@ -112,7 +153,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating application:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
