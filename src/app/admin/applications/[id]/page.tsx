@@ -10,7 +10,7 @@ interface PageProps {
   };
 }
 
-type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
+type ApplicationStatus = 'pending' | 'reviewed' | 'accepted' | 'rejected';
 
 export default async function ApplicationDetailPage({ params }: PageProps) {
   try {
@@ -26,7 +26,6 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
     // Format the application data
     const formattedApplication = {
       ...application[0],
-      workExperience: application[0].workExperience || '',
       englishLevel: application[0].englishLevel || '',
       frenchLevel: application[0].frenchLevel || '',
       budget: Number(application[0].budget),

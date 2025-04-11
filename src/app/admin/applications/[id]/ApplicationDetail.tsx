@@ -13,18 +13,17 @@ interface Application {
   email: string;
   phone: string;
   birthDate: string;
-  address: string;
-  city: string;
-  country: string;
-  postalCode: string;
+  nationality: string;
+  currentCountry: string;
   educationLevel: string;
-  workExperience: string;
   englishLevel: string;
   frenchLevel: string;
-  program: string;
+  programType: string;
+  programDuration: string;
   startDate: string;
   budget: number;
-  status: 'pending' | 'reviewed' | 'completed';
+  notes: string;
+  status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
   createdAt: string;
   updatedAt: string;
 }
@@ -37,7 +36,7 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
   const router = useRouter();
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const updateStatus = async (newStatus: 'pending' | 'reviewed' | 'completed') => {
+  const updateStatus = async (newStatus: 'pending' | 'reviewed' | 'accepted' | 'rejected') => {
     try {
       setIsUpdating(true);
       const response = await fetch(`/api/admin/applications/${application.id}`, {
@@ -105,37 +104,36 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
                 <p><span className="font-medium">E-posta:</span> {application.email}</p>
                 <p><span className="font-medium">Telefon:</span> {application.phone}</p>
                 <p><span className="font-medium">Doğum Tarihi:</span> {new Date(application.birthDate).toLocaleDateString('tr-TR')}</p>
+                <p><span className="font-medium">Uyruk:</span> {application.nationality}</p>
+                <p><span className="font-medium">Mevcut Ülke:</span> {application.currentCountry}</p>
               </div>
             </div>
 
             <div>
-              <h2 className="text-xl font-semibold mb-4">Adres Bilgileri</h2>
+              <h2 className="text-xl font-semibold mb-4">Eğitim Bilgileri</h2>
               <div className="space-y-2">
-                <p><span className="font-medium">Adres:</span> {application.address}</p>
-                <p><span className="font-medium">Şehir:</span> {application.city}</p>
-                <p><span className="font-medium">Ülke:</span> {application.country}</p>
-                <p><span className="font-medium">Posta Kodu:</span> {application.postalCode}</p>
+                <p><span className="font-medium">Eğitim Seviyesi:</span> {application.educationLevel}</p>
+                <p><span className="font-medium">Program Türü:</span> {application.programType}</p>
+                <p><span className="font-medium">Program Süresi:</span> {application.programDuration}</p>
+                <p><span className="font-medium">Başlangıç Tarihi:</span> {new Date(application.startDate).toLocaleDateString('tr-TR')}</p>
+                <p><span className="font-medium">Bütçe:</span> {formatCurrency(application.budget)}</p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h2 className="text-xl font-semibold mb-4">Eğitim Bilgileri</h2>
+              <h2 className="text-xl font-semibold mb-4">Dil Seviyeleri</h2>
               <div className="space-y-2">
-                <p><span className="font-medium">Eğitim Seviyesi:</span> {application.educationLevel}</p>
-                <p><span className="font-medium">Program:</span> {application.program}</p>
-                <p><span className="font-medium">Başlangıç Tarihi:</span> {new Date(application.startDate).toLocaleDateString('tr-TR')}</p>
-                <p><span className="font-medium">Bütçe:</span> {formatCurrency(application.budget)}</p>
+                <p><span className="font-medium">İngilizce Seviyesi:</span> {application.englishLevel || 'Belirtilmemiş'}</p>
+                <p><span className="font-medium">Fransızca Seviyesi:</span> {application.frenchLevel || 'Belirtilmemiş'}</p>
               </div>
             </div>
 
             <div>
-              <h2 className="text-xl font-semibold mb-4">Diğer Bilgiler</h2>
+              <h2 className="text-xl font-semibold mb-4">Notlar</h2>
               <div className="space-y-2">
-                <p><span className="font-medium">İş Deneyimi:</span> {application.workExperience || 'Belirtilmemiş'}</p>
-                <p><span className="font-medium">İngilizce Seviyesi:</span> {application.englishLevel || 'Belirtilmemiş'}</p>
-                <p><span className="font-medium">Fransızca Seviyesi:</span> {application.frenchLevel || 'Belirtilmemiş'}</p>
+                <p className="whitespace-pre-wrap">{application.notes || 'Not bulunmuyor'}</p>
               </div>
             </div>
           </div>
@@ -170,15 +168,26 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
                   İncelendi
                 </button>
                 <button
-                  onClick={() => updateStatus('completed')}
-                  disabled={isUpdating || application.status === 'completed'}
+                  onClick={() => updateStatus('accepted')}
+                  disabled={isUpdating || application.status === 'accepted'}
                   className={`px-4 py-2 rounded-md ${
-                    application.status === 'completed'
+                    application.status === 'accepted'
                       ? 'bg-green-500 text-white'
                       : 'bg-green-100 text-green-700 hover:bg-green-200'
                   }`}
                 >
-                  Tamamlandı
+                  Kabul Edildi
+                </button>
+                <button
+                  onClick={() => updateStatus('rejected')}
+                  disabled={isUpdating || application.status === 'rejected'}
+                  className={`px-4 py-2 rounded-md ${
+                    application.status === 'rejected'
+                      ? 'bg-red-500 text-white'
+                      : 'bg-red-100 text-red-700 hover:bg-red-200'
+                  }`}
+                >
+                  Reddedildi
                 </button>
               </div>
             </div>
