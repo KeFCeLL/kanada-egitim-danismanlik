@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 interface Contact {
@@ -72,37 +73,52 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-300">Ad Soyad</label>
-              <div className="mt-1 text-white">{contact.name}</div>
+              <h2 className="text-lg font-semibold text-gray-300 mb-2">Kişisel Bilgiler</h2>
+              <div className="space-y-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Ad Soyad</label>
+                  <div className="mt-1 text-white">{contact.name}</div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">E-posta</label>
+                  <div className="mt-1 text-white">{contact.email}</div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Telefon</label>
+                  <div className="mt-1 text-white">{contact.phone || 'Belirtilmedi'}</div>
+                </div>
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300">E-posta</label>
-              <div className="mt-1 text-white">{contact.email}</div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300">Telefon</label>
-              <div className="mt-1 text-white">{contact.phone || 'Belirtilmedi'}</div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300">Konu</label>
-              <div className="mt-1 text-white">{contact.subject}</div>
+              <h2 className="text-lg font-semibold text-gray-300 mb-2">İletişim Bilgileri</h2>
+              <div className="space-y-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Konu</label>
+                  <div className="mt-1 text-white">{contact.subject}</div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Durum</label>
+                  <div className="mt-1 text-white">
+                    {status === 'pending' ? 'Beklemede' :
+                     status === 'read' ? 'Okundu' :
+                     'Yanıtlandı'}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Gönderilme Tarihi</label>
+                  <div className="mt-1 text-white">
+                    {format(new Date(contact.createdAt), 'dd MMMM yyyy HH:mm', { locale: tr })}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-300">Mesaj</label>
-            <div className="mt-1 p-4 bg-white/5 rounded-xl text-white whitespace-pre-wrap">
-              {contact.message}
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-300">Gönderim Tarihi</label>
-            <div className="mt-1 text-white">
-              {format(new Date(contact.createdAt), 'dd MMMM yyyy HH:mm', { locale: tr })}
+            <h2 className="text-lg font-semibold text-gray-300 mb-2">Mesaj</h2>
+            <div className="bg-white/5 p-4 rounded-xl">
+              <p className="text-white whitespace-pre-wrap">{contact.message}</p>
             </div>
           </div>
 
