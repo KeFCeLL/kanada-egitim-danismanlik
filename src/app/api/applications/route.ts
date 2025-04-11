@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       )
     `;
 
-    if (!tableExists.rows[0].exists) {
+    if (!tableExists[0].exists) {
       return NextResponse.json(
         { error: 'Applications table does not exist' },
         { status: 500 }
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       WHERE table_name = 'applications'
     `;
 
-    console.log('Table columns:', columns.rows);
+    console.log('Table columns:', columns);
 
     // Get applications with proper column mapping
     const result = await sql`
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
       ORDER BY created_at DESC
     `;
 
-    return NextResponse.json(result.rows);
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
       RETURNING *
     `;
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
     console.error('Error creating application:', error);
     return NextResponse.json(
