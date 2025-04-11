@@ -16,13 +16,13 @@ interface Application {
   nationality: string;
   currentCountry: string;
   educationLevel: string;
-  englishLevel: string;
-  frenchLevel: string;
+  englishLevel: string | null;
+  frenchLevel: string | null;
   programType: string;
   programDuration: string;
   startDate: string;
   budget: number;
-  notes: string;
+  notes: string | null;
   status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
   createdAt: string;
   updatedAt: string;
