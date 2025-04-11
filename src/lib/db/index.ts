@@ -2,31 +2,25 @@ import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from './schema';
 
-// Create a connection pool
-const connectionString = process.env.kanada_POSTGRES_URL;
-if (!connectionString) {
-  throw new Error('kanada_POSTGRES_URL is not defined');
+if (!process.env.kanada_POSTGRES_URL) {
+  throw new Error('kanada_POSTGRES_URL environment variable is not set');
 }
 
-// Configure connection pool with Neon.tech specific settings
-const pool = postgres(connectionString, {
-  max: 1,
+// Create a single postgres client for the application
+const sql = postgres(process.env.kanada_POSTGRES_URL, {
   ssl: 'require',
+  max: 1,
   idle_timeout: 20,
-  connect_timeout: 20,
-  max_lifetime: 60 * 30,
-  connection: {
-    application_name: 'kanada_egitim_app',
-  },
+  connect_timeout: 20
 });
 
 // Create drizzle instance with connection pool
-export const db = drizzle(pool, { schema });
+export const db = drizzle(sql, { schema });
 
 // Test database connection
 export async function testConnection(): Promise<boolean> {
   try {
-    await pool`SELECT 1`;
+    await sql`SELECT 1`;
     console.log('Database connection successful');
     return true;
   } catch (error) {
@@ -38,12 +32,14 @@ export async function testConnection(): Promise<boolean> {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('Closing database connections...');
-  await pool.end();
+  await sql.end();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('Closing database connections...');
-  await pool.end();
+  await sql.end();
   process.exit(0);
-}); 
+});
+
+export { sql }; 
