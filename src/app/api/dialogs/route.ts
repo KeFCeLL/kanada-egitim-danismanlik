@@ -1,87 +1,154 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { dialogs } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
+import { sql } from '@vercel/postgres';
 import { v4 as uuidv4 } from 'uuid';
 
 // GET /api/dialogs
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const allDialogs = await db.select().from(dialogs);
-    return NextResponse.json(allDialogs);
+    const result = await sql`
+      SELECT * FROM dialogs
+      ORDER BY createdAt DESC
+    `;
+
+    return NextResponse.json(result.rows);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch dialogs' }, { status: 500 });
+    console.error('Error fetching dialogs:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 // POST /api/dialogs
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { title, content, type, isActive, startDate, endDate, targetPage } = body;
 
-    const newDialog = await db.insert(dialogs).values({
-      id: uuidv4(),
-      title,
-      content,
-      type,
-      isActive: isActive ? '1' : '0',
-      startDate,
-      endDate,
-      targetPage,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }).returning();
+    // Validate required fields
+    if (!title || !content || !type || !startDate) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json(newDialog[0]);
+    const result = await sql`
+      INSERT INTO dialogs (
+        id,
+        title,
+        content,
+        type,
+        isActive,
+        startDate,
+        endDate,
+        targetPage,
+        createdAt,
+        updatedAt
+      ) VALUES (
+        ${uuidv4()},
+        ${title},
+        ${content},
+        ${type},
+        ${isActive || true},
+        ${startDate},
+        ${endDate},
+        ${targetPage},
+        NOW(),
+        NOW()
+      )
+      RETURNING *
+    `;
+
+    return NextResponse.json(result.rows[0], { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create dialog' }, { status: 500 });
+    console.error('Error creating dialog:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 // PUT /api/dialogs/:id
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
     const { id, title, content, type, isActive, startDate, endDate, targetPage } = body;
 
-    const updatedDialog = await db.update(dialogs)
-      .set({
-        title,
-        content,
-        type,
-        isActive: isActive ? '1' : '0',
-        startDate,
-        endDate,
-        targetPage,
-        updatedAt: new Date().toISOString(),
-      })
-      .where(eq(dialogs.id, id))
-      .returning();
-
-    if (!updatedDialog.length) {
-      return NextResponse.json({ error: 'Dialog not found' }, { status: 404 });
+    // Validate required fields
+    if (!id || !title || !content || !type || !startDate) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json(updatedDialog[0]);
+    const result = await sql`
+      UPDATE dialogs
+      SET 
+        title = ${title},
+        content = ${content},
+        type = ${type},
+        isActive = ${isActive},
+        startDate = ${startDate},
+        endDate = ${endDate},
+        targetPage = ${targetPage},
+        updatedAt = NOW()
+      WHERE id = ${id}
+      RETURNING *
+    `;
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Dialog not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(result.rows[0]);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update dialog' }, { status: 500 });
+    console.error('Error updating dialog:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 // DELETE /api/dialogs/:id
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing dialog ID' },
+        { status: 400 }
+      );
     }
 
-    await db.delete(dialogs).where(eq(dialogs.id, id));
+    const result = await sql`
+      DELETE FROM dialogs
+      WHERE id = ${id}
+      RETURNING *
+    `;
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Dialog not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json({ message: 'Dialog deleted successfully' });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete dialog' }, { status: 500 });
+    console.error('Error deleting dialog:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 } 
