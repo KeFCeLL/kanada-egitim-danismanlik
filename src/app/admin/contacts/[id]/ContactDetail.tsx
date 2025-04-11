@@ -2,19 +2,20 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { format } from 'date-fns';
+import { tr } from 'date-fns/locale';
 import Link from 'next/link';
 
 interface Contact {
-  id: string;
+  id: number;
   name: string;
   email: string;
-  phone: string;
+  phone: string | null;
   subject: string;
   message: string;
-  status: string;
-  createdAt?: string | null;
-  updatedAt?: string | null;
+  status: 'pending' | 'read' | 'replied';
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface ContactDetailProps {
@@ -23,10 +24,12 @@ interface ContactDetailProps {
 
 export default function ContactDetail({ contact }: ContactDetailProps) {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<Contact['status']>(contact.status);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const updateStatus = async (newStatus: Contact['status']) => {
+  const handleStatusChange = async (newStatus: Contact['status']) => {
     try {
+      setIsUpdating(true);
       const response = await fetch(`/api/admin/contacts/${contact.id}`, {
         method: 'PUT',
         headers: {
@@ -36,12 +39,15 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Durum güncellenemedi');
+        throw new Error('Failed to update status');
       }
 
+      setStatus(newStatus);
       router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+    } catch (error) {
+      console.error('Error updating status:', error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -64,12 +70,6 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
             </Link>
           </div>
 
-          {error && (
-            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-              <p className="text-red-400">{error}</p>
-            </div>
-          )}
-
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-gray-300">Ad Soyad</label>
@@ -83,7 +83,7 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
 
             <div>
               <label className="block text-sm font-medium text-gray-300">Telefon</label>
-              <div className="mt-1 text-white">{contact.phone}</div>
+              <div className="mt-1 text-white">{contact.phone || 'Belirtilmedi'}</div>
             </div>
 
             <div>
@@ -102,43 +102,23 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-300">Gönderim Tarihi</label>
             <div className="mt-1 text-white">
-              {new Date(contact.createdAt || '').toLocaleString('tr-TR')}
+              {format(new Date(contact.createdAt), 'dd MMMM yyyy HH:mm', { locale: tr })}
             </div>
           </div>
 
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-300 mb-2">Durum</label>
             <div className="flex space-x-4">
-              <button
-                onClick={() => updateStatus('pending')}
-                className={`px-4 py-2 rounded-xl ${
-                  contact.status === 'pending'
-                    ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30'
-                    : 'bg-white/5 text-white hover:bg-white/10'
-                }`}
+              <select
+                value={status}
+                onChange={(e) => handleStatusChange(e.target.value as Contact['status'])}
+                disabled={isUpdating}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                Beklemede
-              </button>
-              <button
-                onClick={() => updateStatus('reviewed')}
-                className={`px-4 py-2 rounded-xl ${
-                  contact.status === 'reviewed'
-                    ? 'bg-blue-500/20 text-blue-500 border border-blue-500/30'
-                    : 'bg-white/5 text-white hover:bg-white/10'
-                }`}
-              >
-                İncelendi
-              </button>
-              <button
-                onClick={() => updateStatus('completed')}
-                className={`px-4 py-2 rounded-xl ${
-                  contact.status === 'completed'
-                    ? 'bg-green-500/20 text-green-500 border border-green-500/30'
-                    : 'bg-white/5 text-white hover:bg-white/10'
-                }`}
-              >
-                Tamamlandı
-              </button>
+                <option value="pending">Beklemede</option>
+                <option value="read">Okundu</option>
+                <option value="replied">Yanıtlandı</option>
+              </select>
             </div>
           </div>
         </motion.div>

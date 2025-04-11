@@ -3,17 +3,20 @@ import { contacts } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import ContactDetail from './ContactDetail';
-import { use } from 'react';
 
 interface PageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
-export default async function ContactDetailPage({ params }: PageProps) {
-  const { id } = use(params);
-  
+export default async function ContactPage({ params }: PageProps) {
+  const id = parseInt(params.id, 10);
+
+  if (isNaN(id)) {
+    notFound();
+  }
+
   const contact = await db.query.contacts.findFirst({
     where: eq(contacts.id, id),
   });
