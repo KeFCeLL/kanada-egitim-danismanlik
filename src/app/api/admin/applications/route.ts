@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const result = await sql`
       SELECT * FROM applications
-      ORDER BY createdAt DESC
+      ORDER BY created_at DESC
     `;
 
     return NextResponse.json(result.rows);
@@ -67,24 +67,24 @@ export async function POST(request: NextRequest) {
 
     const result = await sql`
       INSERT INTO applications (
-        firstName,
-        lastName,
+        first_name,
+        last_name,
         email,
         phone,
-        birthDate,
+        birth_date,
         nationality,
-        currentCountry,
-        educationLevel,
-        englishLevel,
-        frenchLevel,
-        programType,
-        programDuration,
-        startDate,
+        current_country,
+        education_level,
+        english_level,
+        french_level,
+        program_type,
+        program_duration,
+        start_date,
         budget,
         notes,
         status,
-        createdAt,
-        updatedAt
+        created_at,
+        updated_at
       ) VALUES (
         ${firstName},
         ${lastName},
