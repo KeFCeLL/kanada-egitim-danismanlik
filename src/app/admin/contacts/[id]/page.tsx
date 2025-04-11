@@ -25,5 +25,12 @@ export default async function ContactPage({ params }: PageProps) {
     notFound();
   }
 
-  return <ContactDetail contact={contact} />;
+  // Ensure status is one of the allowed values
+  const validStatus = contact.status as 'pending' | 'read' | 'replied';
+  const contactWithValidStatus = {
+    ...contact,
+    status: validStatus,
+  };
+
+  return <ContactDetail contact={contactWithValidStatus} />;
 } 
