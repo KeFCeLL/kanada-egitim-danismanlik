@@ -11,7 +11,7 @@ interface SliderProps {
   autoSlideInterval?: number;
 }
 
-export default function ImageSlider({ slides, autoSlideInterval = 5000 }: SliderProps) {
+export default function ImageSlider({ slides, autoSlideInterval = 8000 }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = useCallback(() => {
@@ -40,11 +40,11 @@ export default function ImageSlider({ slides, autoSlideInterval = 5000 }: Slider
       {/* Main Slide */}
       <div className="relative w-full h-full overflow-hidden rounded-xl">
         <div 
-          className="transition-transform duration-500 h-full" 
+          className="transition-transform duration-1000 h-full" 
           style={{ transform: `translateX(-${currentIndex * 100}%)`, width: `${slides.length * 100}%`, display: 'flex' }}
         >
           {slides.map((slide, index) => (
-            <div key={index} className="relative w-full h-full">
+            <div key={index} className="relative w-full h-full group">
               <Image
                 src={slide.src}
                 alt={slide.alt}
@@ -52,7 +52,18 @@ export default function ImageSlider({ slides, autoSlideInterval = 5000 }: Slider
                 className="object-cover"
                 priority={index === 0}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80"></div>
+              
+              {/* Caption */}
+              <div className="absolute bottom-0 left-0 w-full p-6 transform transition-transform duration-500 translate-y-2 group-hover:translate-y-0">
+                <h3 className="text-white text-2xl font-bold mb-2">{slide.alt}</h3>
+                <p className="text-white/80 max-w-lg">
+                  {index === 0 && "Kanada'nın prestijli üniversite kampüslerinde eğitim fırsatları sizleri bekliyor."}
+                  {index === 1 && "Modern şehir hayatı ve doğal güzelliklerin buluştuğu Kanada'da yaşam deneyimi."}
+                  {index === 2 && "Uluslararası standartlarda ve kariyerinize değer katacak eğitim programları."}
+                  {index === 3 && "Öğrencilerimiz Kanada'da yeni kültürler keşfediyor ve hayatları değişiyor."}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -79,13 +90,13 @@ export default function ImageSlider({ slides, autoSlideInterval = 5000 }: Slider
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
         {slides.map((_, slideIndex) => (
           <button
             key={slideIndex}
             onClick={() => goToSlide(slideIndex)}
             className={`w-3 h-3 rounded-full transition-colors ${
-              slideIndex === currentIndex ? 'bg-white' : 'bg-white/50'
+              slideIndex === currentIndex ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/70'
             }`}
           ></button>
         ))}

@@ -5,19 +5,19 @@ import ImageSlider from '@/components/ui/image-slider';
 export default function Home() {
   const sliderImages = [
     {
-      src: '/images/slider/slide1.jpg',
+      src: '/images/slider/-slide2.jpg',
       alt: 'Kanada Üniversite Kampüsü'
     },
     {
-      src: '/images/slider/slide2.jpg',
+      src: '/images/slider/-slide2.jpg',
       alt: 'Kanada Şehir Manzarası'
     },
     {
-      src: '/images/slider/slide3.jpg',
+      src: '/images/slider/-slide2.jpg',
       alt: 'Kanada Eğitim'
     },
     {
-      src: '/images/slider/slide4.jpg',
+      src: '/images/slider/-slide2.jpg',
       alt: 'Kanada Öğrenciler'
     },
   ];
