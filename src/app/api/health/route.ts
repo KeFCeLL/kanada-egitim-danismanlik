@@ -12,12 +12,12 @@ export async function GET() {
         current_user,
         version(),
         (SELECT COUNT(*) FROM applications) as application_count,
-        (SELECT string_agg(column_name, ', ') 
+        (SELECT string_agg(column_name || ' (' || data_type || ')', ', ') 
          FROM information_schema.columns 
          WHERE table_name = 'applications') as table_columns,
-        (SELECT string_agg(data_type, ', ') 
+        (SELECT string_agg(column_name, ', ') 
          FROM information_schema.columns 
-         WHERE table_name = 'applications') as column_types
+         WHERE table_name = 'applications') as column_names
     `;
     
     return NextResponse.json({
@@ -30,7 +30,7 @@ export async function GET() {
         applications: {
           count: dbInfo.rows[0].application_count,
           columns: dbInfo.rows[0].table_columns,
-          types: dbInfo.rows[0].column_types
+          columnNames: dbInfo.rows[0].column_names
         }
       },
       environment: process.env.NODE_ENV,

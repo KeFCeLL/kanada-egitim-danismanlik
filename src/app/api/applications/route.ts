@@ -20,6 +20,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get column names and types
+    const columns = await sql`
+      SELECT column_name, data_type
+      FROM information_schema.columns
+      WHERE table_name = 'applications'
+    `;
+
+    console.log('Table columns:', columns.rows);
+
     // Get applications with proper column mapping
     const result = await sql`
       SELECT 
@@ -106,6 +115,25 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Log the data being inserted
+    console.log('Inserting application:', {
+      firstName,
+      lastName,
+      email,
+      phone,
+      birthDate,
+      nationality,
+      currentCountry,
+      educationLevel,
+      englishLevel,
+      frenchLevel,
+      programType,
+      programDuration,
+      startDate,
+      budget,
+      notes
+    });
 
     const result = await sql`
       INSERT INTO applications (
