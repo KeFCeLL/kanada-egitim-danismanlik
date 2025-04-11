@@ -1,7 +1,27 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import ImageSlider from '@/components/ui/image-slider';
 
 export default function Home() {
+  const sliderImages = [
+    {
+      src: '/images/slider/slide1.jpg',
+      alt: 'Kanada Üniversite Kampüsü'
+    },
+    {
+      src: '/images/slider/slide2.jpg',
+      alt: 'Kanada Şehir Manzarası'
+    },
+    {
+      src: '/images/slider/slide3.jpg',
+      alt: 'Kanada Eğitim'
+    },
+    {
+      src: '/images/slider/slide4.jpg',
+      alt: 'Kanada Öğrenciler'
+    },
+  ];
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section - Futuristic Design */}
@@ -246,6 +266,23 @@ export default function Home() {
               <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text mb-2">%97</div>
               <p className="text-gray-400">Kabul Oranı</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Slider Section */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black text-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text font-bold text-xl mb-4">BAŞARILARIMIZ</div>
+            <h2 className="text-4xl font-bold mb-4">Eğitim Süreçlerinde Mükemmellik</h2>
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+              Öğrencilerimizin Kanada'daki başarı hikayeleri ve eğitim yolculuklarından kesitler.
+            </p>
+          </div>
+
+          <div className="relative h-80 md:h-96 lg:h-[500px] mx-auto max-w-5xl my-10 shadow-2xl">
+            <ImageSlider slides={sliderImages} autoSlideInterval={6000} />
           </div>
         </div>
       </section>
