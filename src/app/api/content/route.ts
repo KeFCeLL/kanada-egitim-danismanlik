@@ -1,81 +1,145 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { contentSections } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
+import { sql } from '@vercel/postgres';
 import { v4 as uuidv4 } from 'uuid';
 
 // GET /api/content
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const allContent = await db.select().from(contentSections);
-    return NextResponse.json(allContent);
+    const result = await sql`
+      SELECT * FROM content_sections
+      ORDER BY createdAt DESC
+    `;
+
+    return NextResponse.json(result.rows);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch content sections' }, { status: 500 });
+    console.error('Error fetching content:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 // POST /api/content
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { title, page, content, isActive } = body;
 
-    const newContent = await db.insert(contentSections).values({
-      id: uuidv4(),
-      title,
-      page,
-      content,
-      isActive: isActive ? '1' : '0',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }).returning();
+    // Validate required fields
+    if (!title || !page || !content) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json(newContent[0]);
+    const result = await sql`
+      INSERT INTO content_sections (
+        id,
+        title,
+        page,
+        content,
+        isActive,
+        createdAt,
+        updatedAt
+      ) VALUES (
+        ${uuidv4()},
+        ${title},
+        ${page},
+        ${content},
+        ${isActive || true},
+        NOW(),
+        NOW()
+      )
+      RETURNING *
+    `;
+
+    return NextResponse.json(result.rows[0], { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create content section' }, { status: 500 });
+    console.error('Error creating content:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 // PUT /api/content/:id
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
     const { id, title, page, content, isActive } = body;
 
-    const updatedContent = await db.update(contentSections)
-      .set({
-        title,
-        page,
-        content,
-        isActive: isActive ? '1' : '0',
-        updatedAt: new Date().toISOString(),
-      })
-      .where(eq(contentSections.id, id))
-      .returning();
-
-    if (!updatedContent.length) {
-      return NextResponse.json({ error: 'Content section not found' }, { status: 404 });
+    // Validate required fields
+    if (!id || !title || !page || !content) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json(updatedContent[0]);
+    const result = await sql`
+      UPDATE content_sections
+      SET 
+        title = ${title},
+        page = ${page},
+        content = ${content},
+        isActive = ${isActive},
+        updatedAt = NOW()
+      WHERE id = ${id}
+      RETURNING *
+    `;
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Content section not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(result.rows[0]);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update content section' }, { status: 500 });
+    console.error('Error updating content:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 // DELETE /api/content/:id
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing content section ID' },
+        { status: 400 }
+      );
     }
 
-    await db.delete(contentSections).where(eq(contentSections.id, id));
+    const result = await sql`
+      DELETE FROM content_sections
+      WHERE id = ${id}
+      RETURNING *
+    `;
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Content section not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json({ message: 'Content section deleted successfully' });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete content section' }, { status: 500 });
+    console.error('Error deleting content:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 } 
