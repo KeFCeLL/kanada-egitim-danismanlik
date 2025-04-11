@@ -59,20 +59,20 @@ export async function POST(request: NextRequest) {
 
     // Create form fields
     if (fields && fields.length > 0) {
-      await sql`
-        INSERT INTO formFields (
-          id,
-          formId,
-          label,
-          type,
-          required,
-          options,
-          placeholder,
-          "order",
-          createdAt,
-          updatedAt
-        ) VALUES ${sql.join(
-          fields.map((field: any, index: number) => sql`(
+      for (const field of fields) {
+        await sql`
+          INSERT INTO formFields (
+            id,
+            formId,
+            label,
+            type,
+            required,
+            options,
+            placeholder,
+            "order",
+            createdAt,
+            updatedAt
+          ) VALUES (
             ${uuidv4()},
             ${formId},
             ${field.label},
@@ -80,13 +80,12 @@ export async function POST(request: NextRequest) {
             ${field.required || false},
             ${field.options ? JSON.stringify(field.options) : null},
             ${field.placeholder},
-            ${index + 1},
+            ${fields.indexOf(field) + 1},
             NOW(),
             NOW()
-          )`),
-          sql`,`
-        )}
-      `;
+          )
+        `;
+      }
     }
 
     return NextResponse.json(result.rows[0], { status: 201 });
@@ -142,20 +141,20 @@ export async function PUT(request: NextRequest) {
       `;
 
       // Insert new fields
-      await sql`
-        INSERT INTO formFields (
-          id,
-          formId,
-          label,
-          type,
-          required,
-          options,
-          placeholder,
-          "order",
-          createdAt,
-          updatedAt
-        ) VALUES ${sql.join(
-          fields.map((field: any, index: number) => sql`(
+      for (const field of fields) {
+        await sql`
+          INSERT INTO formFields (
+            id,
+            formId,
+            label,
+            type,
+            required,
+            options,
+            placeholder,
+            "order",
+            createdAt,
+            updatedAt
+          ) VALUES (
             ${uuidv4()},
             ${id},
             ${field.label},
@@ -163,13 +162,12 @@ export async function PUT(request: NextRequest) {
             ${field.required || false},
             ${field.options ? JSON.stringify(field.options) : null},
             ${field.placeholder},
-            ${index + 1},
+            ${fields.indexOf(field) + 1},
             NOW(),
             NOW()
-          )`),
-          sql`,`
-        )}
-      `;
+          )
+        `;
+      }
     }
 
     return NextResponse.json(result.rows[0]);
