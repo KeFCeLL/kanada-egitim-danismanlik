@@ -14,7 +14,10 @@ export async function GET() {
         (SELECT COUNT(*) FROM applications) as application_count,
         (SELECT string_agg(column_name, ', ') 
          FROM information_schema.columns 
-         WHERE table_name = 'applications') as table_columns
+         WHERE table_name = 'applications') as table_columns,
+        (SELECT string_agg(data_type, ', ') 
+         FROM information_schema.columns 
+         WHERE table_name = 'applications') as column_types
     `;
     
     return NextResponse.json({
@@ -26,7 +29,8 @@ export async function GET() {
         version: dbInfo.rows[0].version,
         applications: {
           count: dbInfo.rows[0].application_count,
-          columns: dbInfo.rows[0].table_columns
+          columns: dbInfo.rows[0].table_columns,
+          types: dbInfo.rows[0].column_types
         }
       },
       environment: process.env.NODE_ENV,
@@ -39,7 +43,8 @@ export async function GET() {
         status: 'error',
         database: {
           connected: false,
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined
         },
         environment: process.env.NODE_ENV,
         postgresUrl: process.env.kanada_POSTGRES_URL ? 'configured' : 'not configured'

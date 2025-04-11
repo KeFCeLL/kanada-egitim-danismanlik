@@ -1,10 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
+    // First check if the applications table exists
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'applications'
+      )
+    `;
+
+    if (!tableExists.rows[0].exists) {
+      return NextResponse.json(
+        { error: 'Applications table does not exist' },
+        { status: 500 }
+      );
+    }
+
+    // Get applications with proper column mapping
     const result = await sql`
-      SELECT * FROM applications
+      SELECT 
+        id,
+        first_name as "firstName",
+        last_name as "lastName",
+        email,
+        phone,
+        birth_date as "birthDate",
+        nationality,
+        current_country as "currentCountry",
+        education_level as "educationLevel",
+        english_level as "englishLevel",
+        french_level as "frenchLevel",
+        program_type as "programType",
+        program_duration as "programDuration",
+        start_date as "startDate",
+        budget,
+        notes,
+        status,
+        created_at as "createdAt",
+        updated_at as "updatedAt"
+      FROM applications
       ORDER BY created_at DESC
     `;
 
@@ -12,7 +50,11 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      },
       { status: 500 }
     );
   }
@@ -20,10 +62,27 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    const body = await request.json();
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      birthDate,
+      nationality,
+      currentCountry,
+      educationLevel,
+      englishLevel,
+      frenchLevel,
+      programType,
+      programDuration,
+      startDate,
+      budget,
+      notes
+    } = body;
 
     // Validate required fields
-    if (!data.firstName || !data.lastName || !data.email || !data.phone || !data.birthDate || !data.nationality || !data.currentCountry || !data.educationLevel || !data.programType || !data.programDuration || !data.startDate || !data.budget) {
+    if (!firstName || !lastName || !email || !phone || !birthDate || !nationality || !currentCountry || !educationLevel || !programType || !programDuration || !startDate || !budget) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -32,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
+    if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -41,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     // Validate phone format (basic validation)
     const phoneRegex = /^\+?[\d\s-]{10,}$/;
-    if (!phoneRegex.test(data.phone)) {
+    if (!phoneRegex.test(phone)) {
       return NextResponse.json(
         { error: 'Invalid phone format' },
         { status: 400 }
@@ -69,21 +128,21 @@ export async function POST(request: NextRequest) {
         created_at,
         updated_at
       ) VALUES (
-        ${data.firstName},
-        ${data.lastName},
-        ${data.email},
-        ${data.phone},
-        ${data.birthDate},
-        ${data.nationality},
-        ${data.currentCountry},
-        ${data.educationLevel},
-        ${data.englishLevel},
-        ${data.frenchLevel},
-        ${data.programType},
-        ${data.programDuration},
-        ${data.startDate},
-        ${data.budget},
-        ${data.notes},
+        ${firstName},
+        ${lastName},
+        ${email},
+        ${phone},
+        ${birthDate},
+        ${nationality},
+        ${currentCountry},
+        ${educationLevel},
+        ${englishLevel},
+        ${frenchLevel},
+        ${programType},
+        ${programDuration},
+        ${startDate},
+        ${budget},
+        ${notes},
         'pending',
         NOW(),
         NOW()
@@ -95,7 +154,11 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating application:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      },
       { status: 500 }
     );
   }
