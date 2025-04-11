@@ -7,7 +7,7 @@ if (!process.env.kanada_POSTGRES_URL) {
 }
 
 // Create a single postgres client for the application
-export const sql = postgres(process.env.kanada_POSTGRES_URL, {
+const sql = postgres(process.env.kanada_POSTGRES_URL, {
   ssl: 'require',
   max: 1
 });
