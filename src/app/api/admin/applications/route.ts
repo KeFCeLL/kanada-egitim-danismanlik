@@ -16,10 +16,19 @@ async function testDatabaseConnection() {
 
 export async function GET(request: NextRequest) {
   try {
-    // Test database connection first
-    const connectionTest = await sql`SELECT 1`;
-    if (!connectionTest) {
-      throw new Error('Database connection failed');
+    // First check if the applications table exists
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'applications'
+      )
+    `;
+
+    if (!tableExists.rows[0].exists) {
+      return NextResponse.json(
+        { error: 'Applications table does not exist' },
+        { status: 500 }
+      );
     }
 
     // Get applications with proper column mapping
