@@ -1,114 +1,71 @@
-import { db } from './index';
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as schema from './schema';
-import { sql } from 'drizzle-orm';
 
-async function migrate() {
+const connectionString = process.env.kanada_POSTGRES_URL;
+if (!connectionString) {
+  throw new Error('kanada_POSTGRES_URL is not defined');
+}
+
+const pool = postgres(connectionString, {
+  max: 1,
+  ssl: 'require',
+  idle_timeout: 20,
+  connect_timeout: 20,
+  max_lifetime: 60 * 30,
+  connection: {
+    application_name: 'kanada_egitim_app',
+  },
+});
+
+const db = drizzle(pool, { schema });
+
+async function main() {
   try {
-    // Create dialogs table
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS dialogs (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL,
-        type TEXT NOT NULL,
-        is_active INTEGER NOT NULL,
-        start_date TEXT NOT NULL,
-        end_date TEXT NOT NULL,
-        target_page TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    // Test database connection
+    await pool`SELECT 1`;
+    console.log('Database connection successful');
 
-    // Create forms table
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS forms (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL,
-        is_active INTEGER NOT NULL,
-        submit_button_text TEXT NOT NULL,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    // Create form_fields table
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS form_fields (
-        id TEXT PRIMARY KEY,
-        form_id TEXT NOT NULL,
-        label TEXT NOT NULL,
-        type TEXT NOT NULL,
-        required INTEGER NOT NULL,
-        options TEXT,
-        placeholder TEXT,
-        "order" INTEGER NOT NULL,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (form_id) REFERENCES forms(id)
-      )
-    `);
-
-    // Create content_sections table
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS content_sections (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        page TEXT NOT NULL,
-        content TEXT NOT NULL,
-        is_active INTEGER NOT NULL,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    // Drop applications table if exists
+    await pool`
+      DROP TABLE IF EXISTS applications;
+    `;
+    console.log('Applications table dropped');
 
     // Create applications table
-    await db.execute(sql`
+    await pool`
       CREATE TABLE IF NOT EXISTS applications (
-        id TEXT PRIMARY KEY,
-        first_name TEXT NOT NULL,
-        last_name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        phone TEXT NOT NULL,
-        birth_date TEXT NOT NULL,
-        address TEXT NOT NULL,
-        city TEXT NOT NULL,
-        country TEXT NOT NULL,
-        postal_code TEXT NOT NULL,
-        education_level TEXT NOT NULL,
-        work_experience TEXT,
-        english_level TEXT,
-        french_level TEXT,
-        program TEXT NOT NULL,
-        start_date TEXT NOT NULL,
-        budget TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+        id SERIAL PRIMARY KEY,
+        first_name VARCHAR(255) NOT NULL,
+        last_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(255) NOT NULL,
+        birth_date DATE NOT NULL,
+        nationality VARCHAR(255) NOT NULL,
+        current_country VARCHAR(255) NOT NULL,
+        education_level VARCHAR(255) NOT NULL,
+        english_level VARCHAR(255) NOT NULL,
+        french_level VARCHAR(255) NOT NULL,
+        program_type VARCHAR(255) NOT NULL,
+        program_duration VARCHAR(255) NOT NULL,
+        start_date DATE NOT NULL,
+        budget VARCHAR(255) NOT NULL,
+        notes TEXT,
+        status VARCHAR(255) NOT NULL DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+    console.log('Applications table created successfully');
 
-    // Create contacts table
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS contacts (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        phone TEXT NOT NULL,
-        subject TEXT NOT NULL,
-        message TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
+    // Close the connection
+    await pool.end();
     console.log('Migration completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);
-    throw error;
+    process.exit(1);
   }
 }
 
-export default migrate; 
+main(); 

@@ -3,22 +3,35 @@ import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
-import { sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { testConnection } from '@/lib/db';
 
-// Veritabanı bağlantısını test et
-async function testDatabaseConnection() {
-  try {
-    await db.execute(sql`SELECT 1`);
-    return true;
-  } catch (error) {
-    console.error('Veritabanı bağlantı hatası:', error);
-    return false;
+// Helper function to retry database operations
+async function retryOperation<T>(
+  operation: () => Promise<T>,
+  retries = 3,
+  delay = 1000
+): Promise<T> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      console.error(`Operation attempt ${i + 1} failed:`, error);
+      if (i < retries - 1) {
+        console.log(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        throw error;
+      }
+    }
   }
+  throw new Error('Operation failed after all retries');
 }
 
 export async function GET() {
   try {
-    const isConnected = await testDatabaseConnection();
+    // Test database connection first
+    const isConnected = await testConnection();
     if (!isConnected) {
       return NextResponse.json(
         { error: 'Veritabanı bağlantısı kurulamadı' },
@@ -26,19 +39,15 @@ export async function GET() {
       );
     }
 
-    const allApplications = await db
-      .select()
-      .from(applications)
-      .orderBy(desc(applications.createdAt));
-    
-    return NextResponse.json(allApplications);
-  } catch (error: any) {
-    console.error('Başvurular alınırken hata:', error);
+    const results = await retryOperation(async () => {
+      return await db.select().from(applications);
+    });
+
+    return NextResponse.json(results);
+  } catch (error) {
+    console.error('Error fetching applications:', error);
     return NextResponse.json(
-      { 
-        error: 'Başvurular alınırken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
-      },
+      { error: 'Başvurular yüklenirken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -46,9 +55,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const isConnected = await testDatabaseConnection();
+    // Test database connection first
+    const isConnected = await testConnection();
     if (!isConnected) {
-      console.error('Database connection failed');
       return NextResponse.json(
         { error: 'Veritabanı bağlantısı kurulamadı' },
         { status: 500 }
@@ -56,128 +65,122 @@ export async function POST(request: Request) {
     }
 
     const data = await request.json();
-    console.log('Received data:', data);
-    
-    // Veri doğrulama
+
+    // Validate required fields
     const requiredFields = [
       'firstName',
       'lastName',
       'email',
       'phone',
       'birthDate',
-      'address',
-      'city',
-      'country',
-      'postalCode',
+      'nationality',
+      'currentCountry',
       'educationLevel',
-      'program',
+      'englishLevel',
+      'frenchLevel',
+      'programType',
+      'programDuration',
       'startDate',
       'budget'
     ];
-
+    
     const missingFields = requiredFields.filter(field => !data[field]);
+    
     if (missingFields.length > 0) {
-      console.error('Missing required fields:', missingFields);
       return NextResponse.json(
-        { 
-          error: 'Eksik alanlar mevcut',
-          fields: missingFields 
-        },
+        { error: `Eksik alanlar: ${missingFields.join(', ')}` },
         { status: 400 }
       );
     }
 
-    // E-posta formatı kontrolü
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
-      console.error('Invalid email format:', data.email);
       return NextResponse.json(
-        { error: 'Geçersiz e-posta adresi' },
+        { error: 'Geçersiz e-posta formatı' },
         { status: 400 }
       );
     }
 
-    // Telefon formatı kontrolü
-    const phoneRegex = /^[0-9+\-\s()]{10,15}$/;
+    // Validate phone format (basic validation)
+    const phoneRegex = /^[0-9+\-\s()]{10,20}$/;
     if (!phoneRegex.test(data.phone)) {
-      console.error('Invalid phone format:', data.phone);
       return NextResponse.json(
-        { error: 'Geçersiz telefon numarası' },
+        { error: 'Geçersiz telefon numarası formatı' },
         { status: 400 }
       );
     }
 
-    // Bütçe kontrolü
-    if (isNaN(Number(data.budget)) || Number(data.budget) <= 0) {
-      console.error('Invalid budget value:', data.budget);
+    // Validate dates
+    const birthDate = new Date(data.birthDate);
+    const startDate = new Date(data.startDate);
+    const today = new Date();
+
+    if (isNaN(birthDate.getTime())) {
+      return NextResponse.json(
+        { error: 'Geçersiz doğum tarihi' },
+        { status: 400 }
+      );
+    }
+
+    if (isNaN(startDate.getTime())) {
+      return NextResponse.json(
+        { error: 'Geçersiz başlangıç tarihi' },
+        { status: 400 }
+      );
+    }
+
+    if (birthDate > today) {
+      return NextResponse.json(
+        { error: 'Doğum tarihi gelecekte olamaz' },
+        { status: 400 }
+      );
+    }
+
+    if (startDate < today) {
+      return NextResponse.json(
+        { error: 'Başlangıç tarihi geçmişte olamaz' },
+        { status: 400 }
+      );
+    }
+
+    // Validate budget
+    const budget = parseFloat(data.budget);
+    if (isNaN(budget) || budget <= 0) {
       return NextResponse.json(
         { error: 'Geçersiz bütçe değeri' },
         { status: 400 }
       );
     }
 
-    // Başvuru verilerini hazırla
-    const applicationData = {
-      id: nanoid(),
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      birthDate: data.birthDate,
-      address: data.address,
-      city: data.city,
-      country: data.country,
-      postalCode: data.postalCode,
-      educationLevel: data.educationLevel,
-      workExperience: data.workExperience || '',
-      englishLevel: data.englishLevel || '',
-      frenchLevel: data.frenchLevel || '',
-      program: data.program,
-      startDate: data.startDate,
-      budget: String(data.budget), // Convert to string as per schema
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    console.log('Prepared application data:', applicationData);
-
-    // Veritabanına kaydet
-    try {
-      const result = await db.insert(applications).values(applicationData).returning();
-      console.log('Database insertion result:', result);
-      
-      if (!result || result.length === 0) {
-        throw new Error('Başvuru kaydedilemedi');
-      }
-
-      return NextResponse.json(
-        { 
-          message: 'Başvuru başarıyla kaydedildi',
-          application: result[0]
-        },
-        { status: 201 }
-      );
-    } catch (dbError: any) {
-      console.error('Database insertion error:', dbError);
-      throw dbError;
-    }
-  } catch (error: any) {
-    console.error('Application submission error:', error);
-    console.error('Error details:', {
-      message: error?.message,
-      stack: error?.stack,
-      code: error?.code
+    // Insert application with retry mechanism
+    const result = await retryOperation(async () => {
+      return await db.insert(applications).values({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        birthDate: new Date(data.birthDate),
+        nationality: data.nationality,
+        currentCountry: data.currentCountry,
+        educationLevel: data.educationLevel,
+        englishLevel: data.englishLevel,
+        frenchLevel: data.frenchLevel,
+        programType: data.programType,
+        programDuration: data.programDuration,
+        startDate: new Date(data.startDate),
+        budget: data.budget,
+        notes: data.notes || null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }).returning();
     });
+
+    return NextResponse.json(result[0], { status: 201 });
+  } catch (error) {
+    console.error('Error creating application:', error);
     return NextResponse.json(
-      { 
-        error: 'Başvuru kaydedilirken bir hata oluştu',
-        details: process.env.NODE_ENV === 'development' ? {
-          message: error?.message,
-          stack: error?.stack,
-          code: error?.code
-        } : undefined
-      },
+      { error: 'Başvuru oluşturulurken bir hata oluştu' },
       { status: 500 }
     );
   }

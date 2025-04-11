@@ -18,7 +18,7 @@ const educationLevels = [
   { value: 'phd', label: 'Doktora' }
 ];
 
-const programs = [
+const programTypes = [
   { value: 'language_school', label: 'Dil Okulu' },
   { value: 'university', label: 'Üniversite' },
   { value: 'college', label: 'Kolej' },
@@ -32,6 +32,14 @@ const languageLevels = [
   { value: 'fluent', label: 'Akıcı' }
 ];
 
+const programDurations = [
+  { value: '3_months', label: '3 Ay' },
+  { value: '6_months', label: '6 Ay' },
+  { value: '1_year', label: '1 Yıl' },
+  { value: '2_years', label: '2 Yıl' },
+  { value: '4_years', label: '4 Yıl' }
+];
+
 export default function ApplyPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,26 +49,29 @@ export default function ApplyPage() {
     email: '',
     phone: '',
     birthDate: '',
-    address: '',
-    city: '',
-    country: '',
-    postalCode: '',
+    nationality: '',
+    currentCountry: '',
     educationLevel: '',
-    workExperience: '',
     englishLevel: '',
     frenchLevel: '',
-    program: '',
+    programType: '',
+    programDuration: '',
     startDate: '',
-    budget: ''
+    budget: '',
+    notes: ''
   });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
+    setSuccess(false);
     setIsSubmitting(true);
 
     try {
@@ -78,10 +89,28 @@ export default function ApplyPage() {
         throw new Error(data.error || 'Başvuru gönderilirken bir hata oluştu');
       }
 
-      toast.success('Başvurunuz başarıyla alındı!');
-      router.push('/');
-    } catch (error: any) {
-      toast.error(error.message);
+      setSuccess(true);
+      toast.success('Başvurunuz başarıyla gönderildi!');
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        birthDate: '',
+        nationality: '',
+        currentCountry: '',
+        educationLevel: '',
+        englishLevel: '',
+        frenchLevel: '',
+        programType: '',
+        programDuration: '',
+        startDate: '',
+        budget: '',
+        notes: ''
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Başvuru gönderilirken bir hata oluştu');
+      toast.error('Başvuru gönderilirken bir hata oluştu');
     } finally {
       setIsSubmitting(false);
     }
@@ -104,6 +133,18 @@ export default function ApplyPage() {
             <p className="text-xl mb-10 text-gray-300">
               Lütfen aşağıdaki formu doldurun.
             </p>
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="mb-6 p-4 bg-green-500/10 border border-green-500/50 rounded-lg text-green-500">
+                Başvurunuz başarıyla gönderildi!
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -162,72 +203,47 @@ export default function ApplyPage() {
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="birthDate" className="block text-sm font-medium text-gray-300 mb-2">Doğum Tarihi</Label>
-                <Input
-                  id="birthDate"
-                  name="birthDate"
-                  type="date"
-                  value={formData.birthDate}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="birthDate" className="block text-sm font-medium text-gray-300 mb-2">Doğum Tarihi</Label>
+                  <Input
+                    id="birthDate"
+                    name="birthDate"
+                    type="date"
+                    value={formData.birthDate}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="nationality" className="block text-sm font-medium text-gray-300 mb-2">Uyruk</Label>
+                  <Input
+                    id="nationality"
+                    name="nationality"
+                    value={formData.nationality}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Uyruğunuz"
+                  />
+                </div>
               </div>
 
               <div>
-                <Label htmlFor="address" className="block text-sm font-medium text-gray-300 mb-2">Adres</Label>
-                <Textarea
-                  id="address"
-                  name="address"
-                  value={formData.address}
+                <Label htmlFor="currentCountry" className="block text-sm font-medium text-gray-300 mb-2">Yaşadığınız Ülke</Label>
+                <Input
+                  id="currentCountry"
+                  name="currentCountry"
+                  value={formData.currentCountry}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                  placeholder="Adresiniz"
+                  placeholder="Şu anda yaşadığınız ülke"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <Label htmlFor="city" className="block text-sm font-medium text-gray-300 mb-2">Şehir</Label>
-                  <Input
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    placeholder="Şehir"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="country" className="block text-sm font-medium text-gray-300 mb-2">Ülke</Label>
-                  <Input
-                    id="country"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    placeholder="Ülke"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="postalCode" className="block text-sm font-medium text-gray-300 mb-2">Posta Kodu</Label>
-                  <Input
-                    id="postalCode"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    placeholder="Posta Kodu"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="educationLevel" className="block text-sm font-medium text-gray-300 mb-2">Eğitim Seviyesi</Label>
                   <Select
@@ -247,15 +263,79 @@ export default function ApplyPage() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="workExperience" className="block text-sm font-medium text-gray-300 mb-2">İş Deneyimi</Label>
-                  <Textarea
-                    id="workExperience"
-                    name="workExperience"
-                    value={formData.workExperience}
+                  <Label htmlFor="englishLevel" className="block text-sm font-medium text-gray-300 mb-2">İngilizce Seviyesi</Label>
+                  <Select
+                    id="englishLevel"
+                    name="englishLevel"
+                    value={formData.englishLevel}
                     onChange={handleChange}
+                    required
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    placeholder="İş deneyiminiz"
-                  />
+                  >
+                    <option value="">Seçiniz</option>
+                    {languageLevels.map(level => (
+                      <option key={level.value} value={level.value} className="bg-gray-900 text-white">
+                        {level.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="frenchLevel" className="block text-sm font-medium text-gray-300 mb-2">Fransızca Seviyesi</Label>
+                  <Select
+                    id="frenchLevel"
+                    name="frenchLevel"
+                    value={formData.frenchLevel}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    <option value="">Seçiniz</option>
+                    {languageLevels.map(level => (
+                      <option key={level.value} value={level.value} className="bg-gray-900 text-white">
+                        {level.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="programType" className="block text-sm font-medium text-gray-300 mb-2">Program Türü</Label>
+                  <Select
+                    id="programType"
+                    name="programType"
+                    value={formData.programType}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    <option value="">Seçiniz</option>
+                    {programTypes.map(type => (
+                      <option key={type.value} value={type.value} className="bg-gray-900 text-white">
+                        {type.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="programDuration" className="block text-sm font-medium text-gray-300 mb-2">Program Süresi</Label>
+                  <Select
+                    id="programDuration"
+                    name="programDuration"
+                    value={formData.programDuration}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    <option value="">Seçiniz</option>
+                    {programDurations.map(duration => (
+                      <option key={duration.value} value={duration.value} className="bg-gray-900 text-white">
+                        {duration.label}
+                      </option>
+                    ))}
+                  </Select>
                 </div>
               </div>
 
@@ -286,6 +366,19 @@ export default function ApplyPage() {
                     placeholder="Bütçeniz"
                   />
                 </div>
+              </div>
+
+              <div>
+                <Label htmlFor="notes" className="block text-sm font-medium text-gray-300 mb-2">Notlar</Label>
+                <Textarea
+                  id="notes"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  placeholder="Eklemek istediğiniz notlar"
+                  rows={4}
+                />
               </div>
 
               <Button

@@ -2,14 +2,36 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { applications } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 type ApplicationStatus = 'pending' | 'reviewed' | 'completed';
 
+async function testDatabaseConnection() {
+  try {
+    await db.execute(sql`SELECT 1`);
+    return true;
+  } catch (error) {
+    console.error('Veritabanı bağlantı hatası:', error);
+    return false;
+  }
+}
+
 export async function GET() {
   try {
-    const results = await db.select().from(applications).orderBy(desc(applications.createdAt));
+    const isConnected = await testDatabaseConnection();
+    if (!isConnected) {
+      return NextResponse.json(
+        { error: 'Veritabanı bağlantısı kurulamadı' },
+        { status: 500 }
+      );
+    }
+
+    const allApplications = await db
+      .select()
+      .from(applications)
+      .orderBy(desc(applications.createdAt));
     
-    const formattedApplications = results.map(app => ({
+    const formattedApplications = allApplications.map(app => ({
       id: app.id,
       firstName: app.firstName,
       lastName: app.lastName,
@@ -33,10 +55,13 @@ export async function GET() {
     }));
 
     return NextResponse.json(formattedApplications);
-  } catch (error) {
-    console.error('Error fetching applications:', error);
+  } catch (error: any) {
+    console.error('Başvurular alınırken hata:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch applications' },
+      { 
+        error: 'Başvurular alınırken bir hata oluştu',
+        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
+      },
       { status: 500 }
     );
   }

@@ -6,21 +6,24 @@ import Link from 'next/link';
 
 interface Application {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
-  birth_date: string;
-  address: string;
-  city: string;
-  province: string;
-  postal_code: string;
-  education: string;
-  work_experience: string;
-  skills: string;
-  additional_info: string;
+  birthDate: string;
+  nationality: string;
+  currentCountry: string;
+  educationLevel: string;
+  englishLevel: string;
+  frenchLevel: string;
+  programType: string;
+  programDuration: string;
+  startDate: string;
+  budget: string;
+  notes: string | null;
   status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
-  created_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function ApplicationsPage() {
@@ -145,6 +148,7 @@ export default function ApplicationsPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Ad Soyad</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">E-posta</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Telefon</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Program</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Tarih</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Durum</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">İşlemler</th>
@@ -154,7 +158,7 @@ export default function ApplicationsPage() {
                   {applications.map((application) => (
                     <tr key={application.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-white">{application.first_name} {application.last_name}</div>
+                        <div className="text-sm text-white">{application.firstName} {application.lastName}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-white">{application.email}</div>
@@ -164,7 +168,12 @@ export default function ApplicationsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-white">
-                          {new Date(application.created_at).toLocaleDateString('tr-TR')}
+                          {application.programType} ({application.programDuration})
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-white">
+                          {new Date(application.createdAt).toLocaleDateString('tr-TR')}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

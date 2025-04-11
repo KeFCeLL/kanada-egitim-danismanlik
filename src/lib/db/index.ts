@@ -1,41 +1,49 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.NILEDB_URL;
-
+// Create a connection pool
+const connectionString = process.env.kanada_POSTGRES_URL;
 if (!connectionString) {
-  throw new Error('Veritabanı bağlantı URL\'si ayarlanmamış. Lütfen DATABASE_URL, POSTGRES_URL veya NILEDB_URL ortam değişkenini ayarlayın.');
+  throw new Error('kanada_POSTGRES_URL is not defined');
 }
 
-// NileDB için özel bağlantı ayarları
-const client = postgres(connectionString, {
-  ssl: {
-    rejectUnauthorized: false
-  },
-  max: 10,
+// Configure connection pool with Neon.tech specific settings
+const pool = postgres(connectionString, {
+  max: 1,
+  ssl: 'require',
   idle_timeout: 20,
-  connect_timeout: 10,
-  prepare: false,
-  transform: {
-    undefined: null
-  }
+  connect_timeout: 20,
+  max_lifetime: 60 * 30,
+  connection: {
+    application_name: 'kanada_egitim_app',
+  },
 });
 
-export const db = drizzle(client, { schema });
+// Create drizzle instance with connection pool
+export const db = drizzle(pool, { schema });
 
-// Bağlantıyı test et
-async function testConnection() {
+// Test database connection
+export async function testConnection(): Promise<boolean> {
   try {
-    await client`SELECT 1`;
-    console.log('Veritabanı bağlantısı başarılı');
+    await pool`SELECT 1`;
+    console.log('Database connection successful');
+    return true;
   } catch (error) {
-    console.error('Veritabanı bağlantısı başarısız:', error);
-    throw error;
+    console.error('Database connection error:', error);
+    return false;
   }
 }
 
-// Uygulama başlangıcında bağlantıyı test et
-if (process.env.NODE_ENV !== 'test') {
-  testConnection().catch(console.error);
-} 
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('Closing database connections...');
+  await pool.end();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  console.log('Closing database connections...');
+  await pool.end();
+  process.exit(0);
+}); 
