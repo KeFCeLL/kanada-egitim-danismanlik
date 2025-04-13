@@ -8,15 +8,14 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 interface Contact {
-  id: number;
+  id: string;
   name: string;
   email: string;
   phone: string | null;
   subject: string;
   message: string;
-  status: 'pending' | 'read' | 'replied';
-  createdAt: Date;
-  updatedAt: Date;
+  status: 'pending' | 'reviewed' | 'completed';
+  createdAt: string;
 }
 
 interface ContactDetailProps {
@@ -101,8 +100,8 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
                   <label className="block text-sm font-medium text-gray-300">Durum</label>
                   <div className="mt-1 text-white">
                     {status === 'pending' ? 'Beklemede' :
-                     status === 'read' ? 'Okundu' :
-                     'Yanıtlandı'}
+                     status === 'reviewed' ? 'Okundu' :
+                     'Tamamlandı'}
                   </div>
                 </div>
                 <div>
@@ -132,8 +131,8 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="pending" className="bg-gray-900 text-white">Beklemede</option>
-                <option value="read" className="bg-gray-900 text-white">Okundu</option>
-                <option value="replied" className="bg-gray-900 text-white">Yanıtlandı</option>
+                <option value="reviewed" className="bg-gray-900 text-white">Okundu</option>
+                <option value="completed" className="bg-gray-900 text-white">Tamamlandı</option>
               </select>
             </div>
           </div>
