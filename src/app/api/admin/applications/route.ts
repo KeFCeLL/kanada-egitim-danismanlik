@@ -18,6 +18,9 @@ async function testConnection() {
 
 export async function GET() {
   try {
+    console.log('Starting GET /api/admin/applications');
+    console.log('Database URL:', process.env.POSTGRES_URL ? 'configured' : 'missing');
+    
     const result = await sql`
       SELECT 
         id,
@@ -32,13 +35,21 @@ export async function GET() {
       ORDER BY created_at DESC
     `;
 
+    console.log('Query successful, returning results');
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error in GET /api/admin/applications:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      type: error instanceof Error ? error.constructor.name : typeof error
+    });
+    
     return NextResponse.json(
       { 
         error: 'Failed to fetch applications',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        type: error instanceof Error ? error.constructor.name : typeof error
       },
       { status: 500 }
     );
