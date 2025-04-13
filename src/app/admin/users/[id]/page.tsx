@@ -12,10 +12,18 @@ interface User {
   is_active: boolean;
 }
 
+interface FormData {
+  username: string;
+  email: string;
+  password?: string;
+  role: string;
+  is_active: boolean;
+}
+
 export default function EditUserPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
     password: '',
