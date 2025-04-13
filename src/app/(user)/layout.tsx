@@ -113,9 +113,22 @@ export default function UserLayout({ children }: UserLayoutProps) {
             <div>
               <h4 className="text-lg font-semibold mb-4">İletişim</h4>
               <ul className="space-y-2">
-                <li className="flex items-center"><span className="mr-2">📱</span> +1 (123) 456-7890</li>
-                <li className="flex items-center"><span className="mr-2">✉️</span> info@kanadakolayvize.com</li>
-                <li className="flex items-center"><span className="mr-2">📍</span> Toronto, ON, Kanada</li>
+                <li className="flex items-center space-x-2">
+                  <span>📱</span>
+                  <a href="tel:+905059866107" className="text-gray-300 hover:text-white">
+                    +90 505 986 61 07
+                  </a>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <span>✉️</span>
+                  <a href="mailto:info@kanadakolayvize.com" className="text-gray-300 hover:text-white">
+                    info@kanadakolayvize.com
+                  </a>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <span>📍</span>
+                  <span className="text-gray-300">Toronto, ON, Kanada</span>
+                </li>
               </ul>
             </div>
           </div>
