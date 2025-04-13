@@ -1,6 +1,4 @@
-import { db } from '@/lib/db';
-import { contacts } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { sql } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import ContactDetail from './ContactDetail';
 
@@ -17,16 +15,28 @@ export default async function ContactPage({ params }: PageProps) {
     notFound();
   }
 
-  const contact = await db.query.contacts.findFirst({
-    where: eq(contacts.id, id),
-  });
+  const result = await sql`
+    SELECT 
+      id::text,
+      name,
+      email,
+      phone,
+      subject,
+      message,
+      status,
+      created_at as "createdAt"
+    FROM contacts
+    WHERE id = ${id}
+  `;
+
+  const contact = result[0];
 
   if (!contact) {
     notFound();
   }
 
   // Ensure status is one of the allowed values
-  const validStatus = contact.status as 'pending' | 'read' | 'replied';
+  const validStatus = contact.status as 'pending' | 'reviewed' | 'completed';
   const contactWithValidStatus = {
     ...contact,
     status: validStatus,
