@@ -27,7 +27,8 @@ export default function UsersPage() {
     username: '',
     email: '',
     password: '',
-    role: 'admin'
+    role: 'admin',
+    is_active: true
   });
 
   useEffect(() => {
@@ -57,7 +58,13 @@ export default function UsersPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          is_active: true
+        }),
       });
 
       if (!response.ok) {
@@ -65,7 +72,13 @@ export default function UsersPage() {
       }
 
       setShowAddModal(false);
-      setFormData({ username: '', email: '', password: '', role: 'admin' });
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        role: 'admin',
+        is_active: true
+      });
       fetchUsers();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
@@ -91,7 +104,7 @@ export default function UsersPage() {
 
       setShowEditModal(false);
       setSelectedUser(null);
-      setFormData({ username: '', email: '', password: '', role: 'admin' });
+      setFormData({ username: '', email: '', password: '', role: 'admin', is_active: true });
       fetchUsers();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
@@ -134,6 +147,18 @@ export default function UsersPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     }
+  };
+
+  const handleEditClick = (user: User) => {
+    setSelectedUser(user);
+    setFormData({
+      username: user.username,
+      email: user.email,
+      password: '',
+      role: user.role,
+      is_active: user.is_active
+    });
+    setShowEditModal(true);
   };
 
   if (loading) {
@@ -233,16 +258,7 @@ export default function UsersPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => {
-                            setSelectedUser(user);
-                            setFormData({
-                              username: user.username,
-                              email: user.email,
-                              password: '',
-                              role: user.role
-                            });
-                            setShowEditModal(true);
-                          }}
+                          onClick={() => handleEditClick(user)}
                           className="inline-flex items-center px-3 py-1 border border-cyan-500/20 text-sm font-medium rounded-lg text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20"
                         >
                           Düzenle
