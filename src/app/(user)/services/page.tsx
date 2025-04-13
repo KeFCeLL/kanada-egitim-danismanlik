@@ -6,7 +6,7 @@ export default function Services() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text font-bold text-xl mb-2">KANADAEDU HİZMETLERİ</div>
+          <div className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text font-bold text-xl mb-2">Kanada Kolay Vize</div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Hizmetlerimiz</h1>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Kanada'da eğitim almak isteyen öğrencilere kapsamlı danışmanlık ve destek hizmetleri sunuyoruz.
