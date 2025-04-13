@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { text, integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { text, integer, pgTable, serial, timestamp, varchar, boolean } from 'drizzle-orm/pg-core';
 
 export const dialogs = pgTable('dialogs', {
   id: text('id').primaryKey(),
@@ -79,4 +79,15 @@ export const contacts = pgTable('contacts', {
   status: varchar('status', { length: 20 }).default('pending').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
+});
+
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  email: text('email').notNull().unique(),
+  password: text('password').notNull(),
+  role: text('role').notNull().default('admin'),
+  is_active: boolean('is_active').notNull().default(true),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').notNull().defaultNow(),
 }); 
