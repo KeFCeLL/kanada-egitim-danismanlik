@@ -225,119 +225,120 @@ export default function ApplicationsPage() {
       {/* Detail Modal */}
       <AnimatePresence>
         {selectedApplication && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedApplication(null)}
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-gray-900 rounded-3xl p-8 max-w-2xl w-full mx-4 border border-white/10"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Başvuru Detayları</h2>
+              <div className="flex justify-between items-start mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 text-transparent bg-clip-text">
+                  Başvuru Detayları
+                </h2>
                 <button
                   onClick={() => setSelectedApplication(null)}
                   className="text-gray-400 hover:text-white"
                 >
-                  ✕
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-gray-400 text-sm">Ad Soyad</h3>
-                  <p className="text-white">{selectedApplication.firstName} {selectedApplication.lastName}</p>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Ad Soyad</h3>
+                    <p className="text-white">{selectedApplication.firstName} {selectedApplication.lastName}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">E-posta</h3>
+                    <p className="text-white">{selectedApplication.email}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Telefon</h3>
+                    <p className="text-white">{selectedApplication.phone}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Doğum Tarihi</h3>
+                    <p className="text-white">{formatDate(selectedApplication.birthDate)}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Uyruk</h3>
+                    <p className="text-white">{selectedApplication.nationality}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Mevcut Ülke</h3>
+                    <p className="text-white">{selectedApplication.currentCountry}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Eğitim Seviyesi</h3>
+                    <p className="text-white">{selectedApplication.educationLevel}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">İngilizce Seviyesi</h3>
+                    <p className="text-white">{selectedApplication.englishLevel}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Fransızca Seviyesi</h3>
+                    <p className="text-white">{selectedApplication.frenchLevel}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Program Tipi</h3>
+                    <p className="text-white">{selectedApplication.programType}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Program Süresi</h3>
+                    <p className="text-white">{selectedApplication.programDuration}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Başlangıç Tarihi</h3>
+                    <p className="text-white">{formatDate(selectedApplication.startDate)}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Bütçe</h3>
+                    <p className="text-white">{selectedApplication.budget} CAD</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">E-posta</h3>
-                  <p className="text-white">{selectedApplication.email}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Telefon</h3>
-                  <p className="text-white">{selectedApplication.phone}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Doğum Tarihi</h3>
-                  <p className="text-white">{formatDate(selectedApplication.birthDate)}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Uyruk</h3>
-                  <p className="text-white">{selectedApplication.nationality}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Yaşadığı Ülke</h3>
-                  <p className="text-white">{selectedApplication.currentCountry}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Eğitim Seviyesi</h3>
-                  <p className="text-white">{selectedApplication.educationLevel}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">İngilizce Seviyesi</h3>
-                  <p className="text-white">{selectedApplication.englishLevel}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Fransızca Seviyesi</h3>
-                  <p className="text-white">{selectedApplication.frenchLevel}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Program Türü</h3>
-                  <p className="text-white">{selectedApplication.programType}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Program Süresi</h3>
-                  <p className="text-white">{selectedApplication.programDuration}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Başlangıç Tarihi</h3>
-                  <p className="text-white">{formatDate(selectedApplication.startDate)}</p>
-                </div>
-                <div>
-                  <h3 className="text-gray-400 text-sm">Bütçe</h3>
-                  <p className="text-white">{selectedApplication.budget} CAD</p>
-                </div>
-                <div className="col-span-2">
-                  <h3 className="text-gray-400 text-sm">Notlar</h3>
-                  <p className="text-white">{selectedApplication.notes || '-'}</p>
-                </div>
-                <div className="col-span-2">
-                  <h3 className="text-gray-400 text-sm">Durum</h3>
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(selectedApplication.status)}`}>
-                    {getStatusText(selectedApplication.status)}
-                  </span>
-                </div>
-              </div>
 
-              <div className="mt-8 flex justify-end space-x-4">
-                <button
-                  onClick={() => {
-                    updateStatus(selectedApplication.id, 'reviewed');
-                    setSelectedApplication(null);
-                  }}
-                  className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30"
-                >
-                  İncele
-                </button>
-                <button
-                  onClick={() => {
-                    updateStatus(selectedApplication.id, 'accepted');
-                    setSelectedApplication(null);
-                  }}
-                  className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30"
-                >
-                  Kabul Et
-                </button>
-                <button
-                  onClick={() => {
-                    updateStatus(selectedApplication.id, 'rejected');
-                    setSelectedApplication(null);
-                  }}
-                  className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30"
-                >
-                  Reddet
-                </button>
+                {selectedApplication.notes && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-400 mb-1">Notlar</h3>
+                    <p className="text-white">{selectedApplication.notes}</p>
+                  </div>
+                )}
+
+                <div className="flex justify-end space-x-4 pt-6">
+                  <button
+                    onClick={() => updateStatus(selectedApplication.id, 'reviewed')}
+                    className="px-4 py-2 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors"
+                  >
+                    İncele
+                  </button>
+                  <button
+                    onClick={() => updateStatus(selectedApplication.id, 'accepted')}
+                    className="px-4 py-2 bg-green-500/10 text-green-400 rounded-lg hover:bg-green-500/20 transition-colors"
+                  >
+                    Kabul Et
+                  </button>
+                  <button
+                    onClick={() => updateStatus(selectedApplication.id, 'rejected')}
+                    className="px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
+                  >
+                    Reddet
+                  </button>
+                </div>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

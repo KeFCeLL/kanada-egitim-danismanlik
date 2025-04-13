@@ -31,10 +31,10 @@ async function migrate() {
     console.log('Database connection successful');
 
     // Drop existing tables if they exist
-    await sql`DROP TABLE IF EXISTS applications`;
+    await sql`DROP TABLE IF EXISTS applications CASCADE`;
     console.log('Applications table dropped');
 
-    await sql`DROP TABLE IF EXISTS contacts`;
+    await sql`DROP TABLE IF EXISTS contacts CASCADE`;
     console.log('Contacts table dropped');
 
     // Read and execute migrations
@@ -64,4 +64,4 @@ async function migrate() {
 migrate().catch((error) => {
   console.error('Migration failed:', error);
   process.exit(1);
-}); 
+});
