@@ -98,10 +98,29 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300">Durum</label>
-                  <div className="mt-1 text-white">
-                    {status === 'pending' ? 'Beklemede' :
-                     status === 'reviewed' ? 'Okundu' :
-                     'Tamamlandı'}
+                  <div className="mt-1">
+                    <select
+                      value={status}
+                      onChange={(e) => handleStatusChange(e.target.value as Contact['status'])}
+                      disabled={isUpdating}
+                      className={`mt-1 block w-full rounded-md border ${
+                        status === 'pending' ? 'border-yellow-500/20' :
+                        status === 'reviewed' ? 'border-blue-500/20' :
+                        'border-green-500/20'
+                      } ${
+                        status === 'pending' ? 'bg-yellow-500/10' :
+                        status === 'reviewed' ? 'bg-blue-500/10' :
+                        'bg-green-500/10'
+                      } ${
+                        status === 'pending' ? 'text-yellow-400' :
+                        status === 'reviewed' ? 'text-blue-400' :
+                        'text-green-400'
+                      } py-2 px-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent`}
+                    >
+                      <option value="pending" className="bg-gray-900 text-white">Beklemede</option>
+                      <option value="reviewed" className="bg-gray-900 text-white">Okundu</option>
+                      <option value="completed" className="bg-gray-900 text-white">Tamamlandı</option>
+                    </select>
                   </div>
                 </div>
                 <div>
@@ -114,27 +133,9 @@ export default function ContactDetail({ contact }: ContactDetailProps) {
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-8">
             <h2 className="text-lg font-semibold text-gray-300 mb-2">Mesaj</h2>
-            <div className="bg-white/5 p-4 rounded-xl">
-              <p className="text-white whitespace-pre-wrap">{contact.message}</p>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">Durum</label>
-            <div className="flex space-x-4">
-              <select
-                value={status}
-                onChange={(e) => handleStatusChange(e.target.value as Contact['status'])}
-                disabled={isUpdating}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <option value="pending" className="bg-gray-900 text-white">Beklemede</option>
-                <option value="reviewed" className="bg-gray-900 text-white">Okundu</option>
-                <option value="completed" className="bg-gray-900 text-white">Tamamlandı</option>
-              </select>
-            </div>
+            <div className="mt-1 text-white whitespace-pre-wrap">{contact.message}</div>
           </div>
         </motion.div>
       </div>
