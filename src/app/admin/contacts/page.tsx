@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Contact {
   id: string;
@@ -16,6 +17,7 @@ interface Contact {
 }
 
 export default function ContactsPage() {
+  const router = useRouter();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -57,6 +59,9 @@ export default function ContactsPage() {
       setContacts(contacts.map(contact => 
         contact.id === id ? { ...contact, status } : contact
       ));
+
+      // Refresh the page to get the latest data
+      router.refresh();
     } catch (error) {
       console.error('Status update error:', error);
     }

@@ -1,16 +1,25 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { contacts } from '@/lib/db/schema';
-import { desc } from 'drizzle-orm';
+import { sql } from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const allContacts = await db
-      .select()
-      .from(contacts)
-      .orderBy(desc(contacts.createdAt));
+    const result = await sql`
+      SELECT 
+        id::text,
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        status,
+        created_at as "createdAt"
+      FROM contacts
+      ORDER BY created_at DESC
+    `;
     
-    return NextResponse.json(allContacts);
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching contacts:', error);
     return NextResponse.json(
