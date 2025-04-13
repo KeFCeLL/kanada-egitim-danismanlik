@@ -37,10 +37,15 @@ export default async function ContactPage({ params }: PageProps) {
 
   // Ensure status is one of the allowed values
   const validStatus = contact.status as 'pending' | 'reviewed' | 'completed';
-  const contactWithValidStatus = {
-    ...contact,
+  const contactWithValidStatus: Contact = {
+    id: contact.id,
+    name: contact.name,
+    email: contact.email,
+    phone: contact.phone || null,
+    subject: contact.subject,
+    message: contact.message,
     status: validStatus,
-    phone: contact.phone || null
+    createdAt: contact.createdAt
   };
 
   return <ContactDetail contact={contactWithValidStatus} />;
