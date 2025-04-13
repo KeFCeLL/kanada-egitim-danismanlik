@@ -40,6 +40,7 @@ export default async function ContactPage({ params }: PageProps) {
   const contactWithValidStatus = {
     ...contact,
     status: validStatus,
+    phone: contact.phone || null
   };
 
   return <ContactDetail contact={contactWithValidStatus} />;
