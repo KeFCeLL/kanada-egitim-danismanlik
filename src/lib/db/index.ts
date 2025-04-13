@@ -16,6 +16,9 @@ const sql = postgres(process.env.POSTGRES_URL, {
   connection: {
     application_name: 'kanada_egitim_app',
   },
+  transform: {
+    undefined: null,
+  },
 });
 
 // Create drizzle instance with connection pool
