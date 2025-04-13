@@ -4,25 +4,25 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Application {
-  id: string;
-  firstName: string;
-  lastName: string;
+  id: number;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
-  birthDate: string;
+  birth_date: string;
   nationality: string;
-  currentCountry: string;
-  educationLevel: string;
-  englishLevel: string;
-  frenchLevel: string;
-  programType: string;
-  programDuration: string;
-  startDate: string;
-  budget: string;
+  current_country: string;
+  education_level: string;
+  english_level: string;
+  french_level: string;
+  program_type: string;
+  program_duration: string;
+  start_date: string;
+  budget: number;
   notes: string | null;
   status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function ApplicationsPage() {
@@ -50,7 +50,7 @@ export default function ApplicationsPage() {
     }
   };
 
-  const updateStatus = async (id: string, newStatus: Application['status']) => {
+  const updateStatus = async (id: number, newStatus: Application['status']) => {
     try {
       const response = await fetch(`/api/admin/applications/${id}`, {
         method: 'PATCH',
@@ -162,7 +162,7 @@ export default function ApplicationsPage() {
                   {applications.map((application) => (
                     <tr key={application.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-white">{application.firstName} {application.lastName}</div>
+                        <div className="text-sm text-white">{application.first_name} {application.last_name}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-white">{application.email}</div>
@@ -172,12 +172,12 @@ export default function ApplicationsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-white">
-                          {application.programType} ({application.programDuration})
+                          {application.program_type} ({application.program_duration})
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-white">
-                          {formatDate(application.createdAt)}
+                          {formatDate(application.created_at)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -257,7 +257,7 @@ export default function ApplicationsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Ad Soyad</h3>
-                    <p className="text-white">{selectedApplication.firstName} {selectedApplication.lastName}</p>
+                    <p className="text-white">{selectedApplication.first_name} {selectedApplication.last_name}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">E-posta</h3>
@@ -269,7 +269,7 @@ export default function ApplicationsPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Doğum Tarihi</h3>
-                    <p className="text-white">{formatDate(selectedApplication.birthDate)}</p>
+                    <p className="text-white">{formatDate(selectedApplication.birth_date)}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Uyruk</h3>
@@ -277,31 +277,31 @@ export default function ApplicationsPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Mevcut Ülke</h3>
-                    <p className="text-white">{selectedApplication.currentCountry}</p>
+                    <p className="text-white">{selectedApplication.current_country}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Eğitim Seviyesi</h3>
-                    <p className="text-white">{selectedApplication.educationLevel}</p>
+                    <p className="text-white">{selectedApplication.education_level}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">İngilizce Seviyesi</h3>
-                    <p className="text-white">{selectedApplication.englishLevel}</p>
+                    <p className="text-white">{selectedApplication.english_level}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Fransızca Seviyesi</h3>
-                    <p className="text-white">{selectedApplication.frenchLevel}</p>
+                    <p className="text-white">{selectedApplication.french_level}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Program Tipi</h3>
-                    <p className="text-white">{selectedApplication.programType}</p>
+                    <p className="text-white">{selectedApplication.program_type}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Program Süresi</h3>
-                    <p className="text-white">{selectedApplication.programDuration}</p>
+                    <p className="text-white">{selectedApplication.program_duration}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Başlangıç Tarihi</h3>
-                    <p className="text-white">{formatDate(selectedApplication.startDate)}</p>
+                    <p className="text-white">{formatDate(selectedApplication.start_date)}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-400 mb-1">Bütçe</h3>
