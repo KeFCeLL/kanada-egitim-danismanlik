@@ -2,12 +2,12 @@ import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from './schema';
 
-if (!process.env.kanada_POSTGRES_URL) {
-  throw new Error('Missing kanada_POSTGRES_URL environment variable');
+if (!process.env.POSTGRES_URL) {
+  throw new Error('Missing POSTGRES_URL environment variable');
 }
 
 // Create a single postgres client for the application
-const sql = postgres(process.env.kanada_POSTGRES_URL, {
+const sql = postgres(process.env.POSTGRES_URL, {
   ssl: 'require',
   max: 1,
   idle_timeout: 20,
