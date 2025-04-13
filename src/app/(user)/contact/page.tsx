@@ -94,15 +94,24 @@ export default function ContactPage() {
                   <FaPhone className="text-cyan-500" />
                   <div>
                     <h3 className="text-white font-medium">Bizi Arayın</h3>
-                    <p className="text-gray-400">+90 242 123 45 67</p>
+                    <a href="tel:+905059866107" className="text-gray-400 hover:text-cyan-500 transition-colors">
+                      +90 505 986 61 07
+                    </a>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
                   <FaWhatsapp className="text-cyan-500" />
                   <div>
-                    <h3 className="text-white font-medium">Online Danışmanlık</h3>
-                    <p className="text-gray-400">Whatsapp: +90 532 123 45 67</p>
+                    <h3 className="text-white font-medium">WhatsApp</h3>
+                    <a 
+                      href="https://wa.me/14377993867" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-cyan-500 transition-colors"
+                    >
+                      +1 (437) 799-3867
+                    </a>
                   </div>
                 </div>
 
