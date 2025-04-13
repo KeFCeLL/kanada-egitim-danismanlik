@@ -53,7 +53,7 @@ export default function ApplicationsPage() {
   const updateStatus = async (id: string, newStatus: Application['status']) => {
     try {
       const response = await fetch(`/api/admin/applications/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
