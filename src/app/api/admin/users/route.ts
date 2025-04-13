@@ -6,6 +6,23 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // Önce tablonun var olup olmadığını kontrol et
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `;
+
+    if (!tableExists[0].exists) {
+      console.error('Users table does not exist');
+      return NextResponse.json(
+        { error: 'Kullanıcılar tablosu bulunamadı' },
+        { status: 500 }
+      );
+    }
+
     const result = await sql`
       SELECT 
         id,
@@ -37,6 +54,23 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Kullanıcı adı, e-posta ve şifre zorunludur' },
         { status: 400 }
+      );
+    }
+
+    // Önce tablonun var olup olmadığını kontrol et
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `;
+
+    if (!tableExists[0].exists) {
+      console.error('Users table does not exist');
+      return NextResponse.json(
+        { error: 'Kullanıcılar tablosu bulunamadı' },
+        { status: 500 }
       );
     }
 
