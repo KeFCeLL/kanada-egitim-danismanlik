@@ -2,6 +2,17 @@ import { sql } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import ContactDetail from './ContactDetail';
 
+interface Contact {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string;
+  message: string;
+  status: 'pending' | 'reviewed' | 'completed';
+  createdAt: string;
+}
+
 interface PageProps {
   params: {
     id: string;
