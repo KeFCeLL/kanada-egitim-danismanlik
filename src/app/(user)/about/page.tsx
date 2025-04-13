@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FaUser, FaUserAlt } from 'react-icons/fa';
 
 export default function About() {
   return (
@@ -99,60 +100,60 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {/* Team Member 1 */}
           <div className="backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-6 rounded-xl relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="relative z-10 text-center">
-              <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 mx-auto mb-4 p-[2px]">
-                <div className="w-full h-full rounded-xl bg-gray-800"></div>
+            <div className="absolute -right-16 -top-16 w-32 h-32 bg-cyan-600/20 rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-4xl mb-4 border border-cyan-500/20 mx-auto">
+                <FaUserAlt className="text-cyan-400" />
               </div>
-              <h3 className="font-bold text-lg text-white">Ahmet Yılmaz</h3>
-              <p className="text-cyan-400 mb-2">Kurucu & CEO</p>
-              <p className="text-gray-400 text-sm">
-                20+ yıl uluslararası eğitim deneyimi. Toronto Üniversitesi İşletme mezunu.
+              <h3 className="text-xl font-bold mb-2 text-center text-white">Ahmet Yılmaz</h3>
+              <p className="text-cyan-400 text-center mb-4">Kurucu & CEO</p>
+              <p className="text-gray-400 text-center">
+                15+ yıllık Kanada eğitim danışmanlığı deneyimi ile öğrencilerin yanında.
               </p>
             </div>
           </div>
           
           {/* Team Member 2 */}
           <div className="backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-6 rounded-xl relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="relative z-10 text-center">
-              <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 mx-auto mb-4 p-[2px]">
-                <div className="w-full h-full rounded-xl bg-gray-800"></div>
+            <div className="absolute -right-16 -top-16 w-32 h-32 bg-purple-600/20 rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full flex items-center justify-center text-4xl mb-4 border border-indigo-500/20 mx-auto">
+                <FaUserAlt className="text-purple-400" />
               </div>
-              <h3 className="font-bold text-lg text-white">Ayşe Kaya</h3>
-              <p className="text-blue-400 mb-2">Üniversite Danışmanı</p>
-              <p className="text-gray-400 text-sm">
-                15+ yıl deneyimli eğitim uzmanı. McGill Üniversitesi Eğitim Bilimleri mezunu.
+              <h3 className="text-xl font-bold mb-2 text-center text-white">Ayşe Kaya</h3>
+              <p className="text-purple-400 text-center mb-4">Eğitim Danışmanı</p>
+              <p className="text-gray-400 text-center">
+                Kanada'daki eğitim fırsatları konusunda uzman danışmanlık sağlıyor.
               </p>
             </div>
           </div>
           
           {/* Team Member 3 */}
           <div className="backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-6 rounded-xl relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="relative z-10 text-center">
-              <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 mx-auto mb-4 p-[2px]">
-                <div className="w-full h-full rounded-xl bg-gray-800"></div>
+            <div className="absolute -right-16 -top-16 w-32 h-32 bg-pink-600/20 rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-full flex items-center justify-center text-4xl mb-4 border border-pink-500/20 mx-auto">
+                <FaUser className="text-pink-400" />
               </div>
-              <h3 className="font-bold text-lg text-white">Mehmet Demir</h3>
-              <p className="text-indigo-400 mb-2">Vize Danışmanı</p>
-              <p className="text-gray-400 text-sm">
-                10+ yıl göçmenlik danışmanlığı. Kanada Göçmenlik Danışmanları Derneği üyesi.
+              <h3 className="text-xl font-bold mb-2 text-center text-white">Zeynep Şahin</h3>
+              <p className="text-pink-400 text-center mb-4">Öğrenci İlişkileri</p>
+              <p className="text-gray-400 text-center">
+                Öğrencilerin Kanada'daki eğitim süreçlerinde destek sağlıyor.
               </p>
             </div>
           </div>
           
           {/* Team Member 4 */}
           <div className="backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-6 rounded-xl relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="relative z-10 text-center">
-              <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 mx-auto mb-4 p-[2px]">
-                <div className="w-full h-full rounded-xl bg-gray-800"></div>
+            <div className="absolute -right-16 -top-16 w-32 h-32 bg-blue-600/20 rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-full flex items-center justify-center text-4xl mb-4 border border-blue-500/20 mx-auto">
+                <FaUser className="text-blue-400" />
               </div>
-              <h3 className="font-bold text-lg text-white">Zeynep Öztürk</h3>
-              <p className="text-purple-400 mb-2">Dil Eğitimi Uzmanı</p>
-              <p className="text-gray-400 text-sm">
-                12+ yıl dil eğitimi deneyimi. British Columbia Üniversitesi TESOL sertifikası.
+              <h3 className="text-xl font-bold mb-2 text-center text-white">Mehmet Demir</h3>
+              <p className="text-blue-400 text-center mb-4">Vize Danışmanı</p>
+              <p className="text-gray-400 text-center">
+                Kanada vize süreçlerinde uzman danışmanlık hizmeti sunuyor.
               </p>
             </div>
           </div>
