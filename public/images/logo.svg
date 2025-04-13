@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="450" height="110" viewBox="0 0 450 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000"/>
+    </filter>
+  </defs>
+  <!-- Text -->
+  <text x="50%" y="50%" font-family="Arial" font-size="48" font-weight="bold" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle" filter="url(#shadow)">
+    Kanada Kolay Vize
+  </text>
+</svg> 

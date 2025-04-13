@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS applications (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(255) NOT NULL,
+  birth_date DATE NOT NULL,
+  nationality VARCHAR(255) NOT NULL,
+  current_country VARCHAR(255) NOT NULL,
+  education_level VARCHAR(255) NOT NULL,
+  english_level VARCHAR(255) NOT NULL,
+  french_level VARCHAR(255) NOT NULL,
+  program_type VARCHAR(255) NOT NULL,
+  program_duration VARCHAR(255) NOT NULL,
+  start_date DATE NOT NULL,
+  budget VARCHAR(255) NOT NULL,
+  notes TEXT,
+  status VARCHAR(255) NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+); 

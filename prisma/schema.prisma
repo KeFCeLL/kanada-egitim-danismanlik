@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model with role-based access
+model User {
+  id            String        @id @default(cuid())
+  name          String
+  email         String        @unique
+  password      String
+  role          UserRole      @default(STUDENT)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  applications  Application[]
+  messages      Message[]     @relation("sentMessages")
+  receivedMsgs  Message[]     @relation("receivedMessages")
+  documents     Document[]
+  blogPosts     BlogPost[]
+}
+
+enum UserRole {
+  ADMIN
+  CONSULTANT
+  EDITOR
+  STUDENT
+}
+
+// Application model for tracking student applications
+model Application {
+  id              String            @id @default(cuid())
+  userId          String
+  user            User              @relation(fields: [userId], references: [id])
+  serviceId       String
+  service         Service           @relation(fields: [serviceId], references: [id])
+  status          ApplicationStatus @default(PENDING)
+  submittedAt     DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  notes           String?
+  documents       Document[]
+  programId       String?
+  program         EducationProgram? @relation(fields: [programId], references: [id])
+  institutionId   String?
+  institution     Institution?      @relation(fields: [institutionId], references: [id])
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  ADDITIONAL_INFO_NEEDED
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+// Services offered by the consultancy
+model Service {
+  id            String         @id @default(cuid())
+  name          String
+  description   String
+  category      ServiceCategory
+  price         Float?
+  duration      String?
+  requirements  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  applications  Application[]
+}
+
+enum ServiceCategory {
+  LANGUAGE_SCHOOL
+  UNIVERSITY
+  VISA_CONSULTING
+  ACCOMMODATION
+  TRANSPORTATION
+  OTHER
+}
+
+// Blog posts for content marketing
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  content     String    @db.Text
+  excerpt     String?
+  slug        String    @unique
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  categories  String[]
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  featured    Boolean   @default(false)
+}
+
+// Messages between users (consultants and students)
+model Message {
+  id          String    @id @default(cuid())
+  content     String
+  senderId    String
+  sender      User      @relation("sentMessages", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User      @relation("receivedMessages", fields: [receiverId], references: [id])
+  read        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  applicationId String?
+}
+
+// Documents such as visas, passports, transcripts, etc.
+model Document {
+  id            String        @id @default(cuid())
+  name          String
+  type          DocumentType
+  url           String
+  uploadedAt    DateTime      @default(now())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  applicationId String?
+  application   Application?  @relation(fields: [applicationId], references: [id])
+}
+
+enum DocumentType {
+  PASSPORT
+  VISA
+  TRANSCRIPT
+  LANGUAGE_TEST
+  ACCEPTANCE_LETTER
+  FINANCIAL_PROOF
+  OTHER
+}
+
+// Educational programs offered
+model EducationProgram {
+  id            String        @id @default(cuid())
+  name          String
+  description   String
+  duration      String
+  requirements  String?
+  tuitionFees   Float?
+  startDates    String[]
+  institutionId String
+  institution   Institution   @relation(fields: [institutionId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  applications  Application[]
+}
+
+// Educational institutions (universities, language schools)
+model Institution {
+  id          String              @id @default(cuid())
+  name        String
+  type        InstitutionType
+  location    String
+  description String?
+  website     String?
+  programs    EducationProgram[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  applications Application[]
+}
+
+enum InstitutionType {
+  UNIVERSITY
+  COLLEGE
+  LANGUAGE_SCHOOL
+  VOCATIONAL_SCHOOL
+}
+
+// FAQ model for Frequently Asked Questions
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  category  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Settings for the application
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
