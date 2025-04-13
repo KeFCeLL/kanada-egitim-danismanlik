@@ -6,7 +6,16 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const result = await sql`
-      SELECT * FROM contacts
+      SELECT 
+        id::text,
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        status,
+        created_at as "createdAt"
+      FROM contacts
       ORDER BY created_at DESC
     `;
 
@@ -77,7 +86,15 @@ export async function POST(request: NextRequest) {
         NOW(),
         NOW()
       )
-      RETURNING *
+      RETURNING 
+        id::text,
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        status,
+        created_at as "createdAt"
     `;
 
     return NextResponse.json(result[0], { status: 201 });
