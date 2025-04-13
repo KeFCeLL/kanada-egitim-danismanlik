@@ -116,6 +116,26 @@ export default function UsersPage() {
     }
   };
 
+  const toggleUserStatus = async (id: number, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ is_active: !currentStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Kullanıcı durumu güncellenemedi');
+      }
+
+      fetchUsers();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4 sm:px-6 lg:px-8">
@@ -152,12 +172,12 @@ export default function UsersPage() {
         >
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-bold text-white">Kullanıcı Yönetimi</h1>
-            <Link
-              href="/admin/users/new"
+            <button
+              onClick={() => setShowAddModal(true)}
               className="inline-flex items-center px-4 py-2 border border-cyan-500/20 text-sm font-medium rounded-lg text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20"
             >
               Yeni Kullanıcı Ekle
-            </Link>
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -212,12 +232,21 @@ export default function UsersPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                       <div className="flex space-x-2">
-                        <Link
-                          href={`/admin/users/${user.id}`}
+                        <button
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setFormData({
+                              username: user.username,
+                              email: user.email,
+                              password: '',
+                              role: user.role
+                            });
+                            setShowEditModal(true);
+                          }}
                           className="inline-flex items-center px-3 py-1 border border-cyan-500/20 text-sm font-medium rounded-lg text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20"
                         >
                           Düzenle
-                        </Link>
+                        </button>
                         <button
                           onClick={() => toggleUserStatus(user.id, user.is_active)}
                           className={`inline-flex items-center px-3 py-1 border text-sm font-medium rounded-lg ${
@@ -229,7 +258,7 @@ export default function UsersPage() {
                           {user.is_active ? 'Devre Dışı Bırak' : 'Aktifleştir'}
                         </button>
                         <button
-                          onClick={() => deleteUser(user.id)}
+                          onClick={() => handleDeleteUser(user.id)}
                           className="inline-flex items-center px-3 py-1 border border-red-500/20 text-sm font-medium rounded-lg text-red-400 bg-red-500/10 hover:bg-red-500/20"
                         >
                           Sil
@@ -243,6 +272,142 @@ export default function UsersPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Add User Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Yeni Kullanıcı Ekle</h2>
+            <form onSubmit={handleAddUser}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Kullanıcı Adı</label>
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">E-posta</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Şifre</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Rol</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="user">Kullanıcı</option>
+                </select>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Ekle
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditModal && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Kullanıcı Düzenle</h2>
+            <form onSubmit={handleEditUser}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Kullanıcı Adı</label>
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">E-posta</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Yeni Şifre (Boş bırakılırsa değişmez)</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Rol</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="user">Kullanıcı</option>
+                </select>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setSelectedUser(null);
+                  }}
+                  className="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Güncelle
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
