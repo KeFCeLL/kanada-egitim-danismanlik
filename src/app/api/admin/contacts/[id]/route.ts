@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { contacts } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { sql } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,9 +17,21 @@ export async function GET(
       );
     }
 
-    const contact = await db.query.contacts.findFirst({
-      where: eq(contacts.id, id),
-    });
+    const result = await sql`
+      SELECT 
+        id::text,
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        status,
+        created_at as "createdAt"
+      FROM contacts
+      WHERE id = ${id}
+    `;
+
+    const contact = result[0];
 
     if (!contact) {
       return NextResponse.json(
@@ -61,20 +71,29 @@ export async function PUT(
     const body = await request.json();
     const { status } = body;
 
-    if (!status || !['pending', 'read', 'replied'].includes(status)) {
+    if (!status || !['pending', 'reviewed', 'completed'].includes(status)) {
       return NextResponse.json(
         { error: 'Invalid status value' },
         { status: 400 }
       );
     }
 
-    const result = await db.update(contacts)
-      .set({ 
+    const result = await sql`
+      UPDATE contacts
+      SET 
+        status = ${status},
+        updated_at = NOW()
+      WHERE id = ${id}
+      RETURNING 
+        id::text,
+        name,
+        email,
+        phone,
+        subject,
+        message,
         status,
-        updatedAt: new Date()
-      })
-      .where(eq(contacts.id, id))
-      .returning();
+        created_at as "createdAt"
+    `;
 
     if (result.length === 0) {
       return NextResponse.json(
