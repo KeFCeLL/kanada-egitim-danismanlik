@@ -6,24 +6,22 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    // Check if users table exists
-    const tableExists = await sql`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'users'
+    // Create users table if it doesn't exist
+    await sql`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) NOT NULL UNIQUE,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) DEFAULT 'admin',
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `;
 
-    if (!tableExists[0].exists) {
-      console.error('Users table does not exist');
-      return NextResponse.json(
-        { error: 'Kullanıcılar tablosu bulunamadı' },
-        { status: 500 }
-      );
-    }
-
-    const result = await sql`
+    // Fetch all users
+    const users = await sql`
       SELECT 
         id,
         username,
@@ -36,9 +34,9 @@ export async function GET() {
       ORDER BY created_at DESC
     `;
     
-    return NextResponse.json(result);
+    return NextResponse.json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error in users API:', error);
     return NextResponse.json(
       { error: 'Kullanıcılar alınırken bir hata oluştu' },
       { status: 500 }
@@ -50,6 +48,7 @@ export async function POST(request: Request) {
   try {
     const { username, email, password, role } = await request.json();
 
+    // Validate required fields
     if (!username || !email || !password) {
       return NextResponse.json(
         { error: 'Kullanıcı adı, e-posta ve şifre zorunludur' },
@@ -57,24 +56,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if users table exists
-    const tableExists = await sql`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'users'
-      );
-    `;
-
-    if (!tableExists[0].exists) {
-      console.error('Users table does not exist');
-      return NextResponse.json(
-        { error: 'Kullanıcılar tablosu bulunamadı' },
-        { status: 500 }
-      );
-    }
-
-    // Check if username or email already exists
+    // Check if user already exists
     const existingUser = await sql`
       SELECT id FROM users 
       WHERE username = ${username} OR email = ${email}
@@ -87,15 +69,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await sql`
+    // Create new user
+    const newUser = await sql`
       INSERT INTO users (username, email, password, role)
       VALUES (${username}, ${email}, ${hashedPassword}, ${role || 'admin'})
       RETURNING id, username, email, role, is_active, created_at, updated_at
     `;
 
-    return NextResponse.json(result[0], { status: 201 });
+    return NextResponse.json(newUser[0], { status: 201 });
   } catch (error) {
     console.error('Error creating user:', error);
     return NextResponse.json(
