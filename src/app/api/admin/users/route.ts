@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    // Önce tablonun var olup olmadığını kontrol et
+    // Check if users table exists
     const tableExists = await sql`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Önce tablonun var olup olmadığını kontrol et
+    // Check if users table exists
     const tableExists = await sql`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
@@ -71,6 +71,19 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Kullanıcılar tablosu bulunamadı' },
         { status: 500 }
+      );
+    }
+
+    // Check if username or email already exists
+    const existingUser = await sql`
+      SELECT id FROM users 
+      WHERE username = ${username} OR email = ${email}
+    `;
+
+    if (existingUser.length > 0) {
+      return NextResponse.json(
+        { error: 'Bu kullanıcı adı veya e-posta adresi zaten kullanılıyor' },
+        { status: 400 }
       );
     }
 

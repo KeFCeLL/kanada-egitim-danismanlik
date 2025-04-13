@@ -44,29 +44,67 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { username, email, password, role, is_active } = await request.json();
+    const { id } = params;
+    const { username, email, password, role } = await request.json();
+
+    if (!username || !email) {
+      return NextResponse.json(
+        { error: 'Kullanıcı adı ve e-posta zorunludur' },
+        { status: 400 }
+      );
+    }
+
+    // Check if users table exists
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `;
+
+    if (!tableExists[0].exists) {
+      console.error('Users table does not exist');
+      return NextResponse.json(
+        { error: 'Kullanıcılar tablosu bulunamadı' },
+        { status: 500 }
+      );
+    }
+
+    // Check if username or email already exists for other users
+    const existingUser = await sql`
+      SELECT id FROM users 
+      WHERE (username = ${username} OR email = ${email})
+      AND id != ${id}
+    `;
+
+    if (existingUser.length > 0) {
+      return NextResponse.json(
+        { error: 'Bu kullanıcı adı veya e-posta adresi başka bir kullanıcı tarafından kullanılıyor' },
+        { status: 400 }
+      );
+    }
 
     let updateQuery = sql`
-      UPDATE users
+      UPDATE users 
       SET 
         username = ${username},
         email = ${email},
-        role = ${role},
-        is_active = ${is_active},
+        role = ${role || 'admin'},
         updated_at = NOW()
     `;
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
       updateQuery = sql`
-        ${updateQuery}
-        , password = ${hashedPassword}
+        ${updateQuery},
+        password = ${hashedPassword}
       `;
     }
 
     updateQuery = sql`
       ${updateQuery}
-      WHERE id = ${params.id}
+      WHERE id = ${id}
       RETURNING id, username, email, role, is_active, created_at, updated_at
     `;
 
@@ -94,9 +132,28 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = params;
+
+    // Check if users table exists
+    const tableExists = await sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `;
+
+    if (!tableExists[0].exists) {
+      console.error('Users table does not exist');
+      return NextResponse.json(
+        { error: 'Kullanıcılar tablosu bulunamadı' },
+        { status: 500 }
+      );
+    }
+
     const result = await sql`
-      DELETE FROM users
-      WHERE id = ${params.id}
+      DELETE FROM users 
+      WHERE id = ${id}
       RETURNING id
     `;
 
