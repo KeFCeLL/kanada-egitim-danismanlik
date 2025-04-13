@@ -36,8 +36,12 @@ export default function LoginPage() {
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
       
-      // Redirect to admin dashboard
-      router.push('/admin');
+      // Redirect to admin dashboard based on user role
+      if (data.user.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/admin');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Giriş yapılırken bir hata oluştu');
     } finally {

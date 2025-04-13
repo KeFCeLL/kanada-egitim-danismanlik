@@ -1,89 +1,65 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Sidebar from '@/components/admin/Sidebar';
 
-interface AdminLayoutProps {
-  children: ReactNode;
-}
-
-export default function AdminLayout({ children }: AdminLayoutProps) {
-  const pathname = usePathname();
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const pathname = usePathname();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication on mount and route changes
-    const auth = localStorage.getItem('adminAuth');
-    if (!auth && pathname !== '/admin/login') {
-      router.push('/admin/login');
-    } else if (auth && pathname === '/admin/login') {
-      router.push('/admin/dashboard');
-    } else {
-      setIsAuthenticated(!!auth);
-    }
-  }, [pathname, router]);
+    const checkAuth = () => {
+      const user = localStorage.getItem('user');
+      
+      if (!user) {
+        router.push('/login');
+        return;
+      }
 
-  if (pathname === '/admin/login') {
-    return children;
+      try {
+        const userData = JSON.parse(user);
+        
+        // If user is not admin and trying to access admin routes
+        if (userData.role !== 'admin' && pathname.startsWith('/admin')) {
+          router.push('/');
+          return;
+        }
+
+        // If user is admin and on login page, redirect to dashboard
+        if (userData.role === 'admin' && pathname === '/login') {
+          router.push('/admin/dashboard');
+          return;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router, pathname]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Yükleniyor...</div>
+      </div>
+    );
   }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  const menuItems = [
-    { href: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/admin/users', label: 'Kullanıcılar', icon: '👥' },
-    { href: '/admin/sliders', label: 'Slider Yönetimi', icon: '🖼️' },
-    { href: '/admin/dialogs', label: 'Diyalog Yönetimi', icon: '💬' },
-    { href: '/admin/forms', label: 'Form Yönetimi', icon: '📝' },
-    { href: '/admin/content', label: 'İçerik Yönetimi', icon: '📄' },
-  ];
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminAuth');
-    router.push('/admin/login');
-  };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-900">
       <div className="flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-lg">
-          <div className="p-4">
-            <h1 className="text-xl font-bold text-red-600">Admin Panel</h1>
-          </div>
-          <nav className="mt-4">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                  pathname === item.href ? 'bg-gray-100 border-r-4 border-red-500' : ''
-                }`}
-              >
-                <span className="mr-2">{item.icon}</span>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="absolute bottom-0 w-64 p-4">
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
-            >
-              <span className="mr-2">🚪</span>
-              Çıkış Yap
-            </button>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1">
-          <div className="p-6">{children}</div>
-        </div>
+        <Sidebar />
+        <main className="flex-1 p-8">{children}</main>
       </div>
     </div>
   );
