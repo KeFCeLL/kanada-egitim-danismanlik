@@ -1,55 +1,113 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const id = parseInt(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { error: 'Invalid application ID' },
+        { status: 400 }
+      );
+    }
+
     const result = await sql`
-      SELECT * FROM applications WHERE id = ${id}
+      SELECT 
+        id,
+        first_name,
+        last_name,
+        email,
+        phone,
+        birth_date,
+        nationality,
+        current_country,
+        education_level,
+        english_level,
+        french_level,
+        program_type,
+        program_duration,
+        start_date,
+        budget,
+        notes,
+        status,
+        created_at,
+        updated_at
+      FROM applications
+      WHERE id = ${id}
     `;
 
     if (result.length === 0) {
-      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Application not found' },
+        { status: 404 }
+      );
     }
 
-    const application = result[0];
-    return NextResponse.json(application);
+    return NextResponse.json(result[0]);
   } catch (error) {
-    console.error('Error fetching application:', error);
+    console.error('Error in GET /api/admin/applications/[id]:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Failed to fetch application',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(
-  request: NextRequest,
+export async function PATCH(
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
-    const { status } = await request.json();
+    const id = parseInt(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { error: 'Invalid application ID' },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+    const { status } = body;
+
+    if (!status) {
+      return NextResponse.json(
+        { error: 'Status is required' },
+        { status: 400 }
+      );
+    }
 
     const result = await sql`
       UPDATE applications
-      SET status = ${status}
+      SET 
+        status = ${status},
+        updated_at = NOW()
       WHERE id = ${id}
       RETURNING *
     `;
 
     if (result.length === 0) {
-      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Application not found' },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(result[0]);
   } catch (error) {
-    console.error('Error updating application:', error);
+    console.error('Error in PATCH /api/admin/applications/[id]:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Failed to update application',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

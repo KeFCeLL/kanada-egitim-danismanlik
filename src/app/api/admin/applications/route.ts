@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { applications } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
 // Test database connection
-async function testDatabaseConnection() {
+async function testConnection() {
   try {
     await sql`SELECT 1`;
     return true;
@@ -14,66 +16,29 @@ async function testDatabaseConnection() {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    // First check if the applications table exists
-    const tableExists = await sql`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_name = 'applications'
-      )
-    `;
-
-    if (!tableExists[0].exists) {
-      return NextResponse.json(
-        { error: 'Applications table does not exist' },
-        { status: 500 }
-      );
-    }
-
-    // Get column names and types
-    const columns = await sql`
-      SELECT column_name, data_type
-      FROM information_schema.columns
-      WHERE table_name = 'applications'
-    `;
-
-    console.log('Table columns:', columns);
-
-    // Get applications with proper column mapping
     const result = await sql`
       SELECT 
         id,
-        first_name as "firstName",
-        last_name as "lastName",
+        first_name,
+        last_name,
         email,
         phone,
-        birth_date as "birthDate",
-        nationality,
-        current_country as "currentCountry",
-        education_level as "educationLevel",
-        english_level as "englishLevel",
-        french_level as "frenchLevel",
-        program_type as "programType",
-        program_duration as "programDuration",
-        start_date as "startDate",
-        budget,
-        notes,
         status,
-        created_at as "createdAt",
-        updated_at as "updatedAt"
+        created_at,
+        updated_at
       FROM applications
       ORDER BY created_at DESC
     `;
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Error fetching applications:', error);
+    console.error('Error in GET /api/admin/applications:', error);
     return NextResponse.json(
       { 
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined
+        error: 'Failed to fetch applications',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
@@ -172,12 +137,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
-    console.error('Error creating application:', error);
+    console.error('Error in POST /api/admin/applications:', error);
     return NextResponse.json(
       { 
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined
+        error: 'Failed to create application',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
