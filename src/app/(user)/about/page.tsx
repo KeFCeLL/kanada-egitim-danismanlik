@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FaUser, FaUserAlt } from 'react-icons/fa';
+import Image from 'next/image';
 
 export default function About() {
   return (
@@ -297,11 +298,60 @@ export default function About() {
           <div className="absolute -right-32 -top-32 w-64 h-64 bg-blue-600/20 rounded-full filter blur-3xl"></div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-5xl mx-auto relative z-10">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
-                <div className="text-gray-400 text-xl font-bold">Logo {i}</div>
-              </div>
-            ))}
+            <div className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src="/images/partners/university-of-toronto.png"
+                alt="University of Toronto"
+                width={120}
+                height={40}
+                className="h-16 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src="/images/partners/mcgill-university.png"
+                alt="McGill University"
+                width={120}
+                height={40}
+                className="h-16 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src="/images/partners/university-of-british-columbia.png"
+                alt="University of British Columbia"
+                width={120}
+                height={40}
+                className="h-16 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src="/images/partners/seneca-college.png"
+                alt="Seneca College"
+                width={120}
+                height={40}
+                className="h-16 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src="/images/partners/george-brown-college.png"
+                alt="George Brown College"
+                width={120}
+                height={40}
+                className="h-16 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 h-24 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors duration-300">
+              <Image
+                src="/images/partners/langara-college.png"
+                alt="Langara College"
+                width={120}
+                height={40}
+                className="h-16 w-auto object-contain"
+              />
+            </div>
           </div>
           
           <div className="text-center mt-8 relative z-10">
