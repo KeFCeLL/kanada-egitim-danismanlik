@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white p-4">
+    <header className="bg-white p-4 fixed w-full top-0 z-50">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
@@ -46,8 +46,10 @@ const Header = () => {
 
           {/* Mobil Menü Butonu */}
           <button
-            className="md:hidden text-gray-700 hover:text-blue-600"
+            type="button"
+            className="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none"
             onClick={toggleMenu}
+            aria-label="Menüyü aç/kapat"
           >
             {isMenuOpen ? (
               <XMarkIcon className="h-6 w-6" />
@@ -58,8 +60,12 @@ const Header = () => {
         </div>
 
         {/* Mobil Menü */}
-        {isMenuOpen && (
-          <nav className="md:hidden mt-4 space-y-4">
+        <div
+          className={`md:hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          }`}
+        >
+          <nav className="mt-4 space-y-4 bg-white p-4 rounded-lg shadow-lg">
             <Link
               href="/"
               className="block text-gray-700 hover:text-blue-600 py-2"
@@ -96,7 +102,7 @@ const Header = () => {
               Giriş Yap
             </Link>
           </nav>
-        )}
+        </div>
       </div>
     </header>
   );
