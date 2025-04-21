@@ -119,7 +119,7 @@ export default function ContactPage() {
                   <FaEnvelope className="text-cyan-500" />
                   <div>
                     <h3 className="text-white font-medium">E-posta</h3>
-                    <p className="text-gray-400">info@example.com</p>
+                    <p className="text-gray-400">info@kanadakolayvize.com</p>
                   </div>
                 </div>
               </div>
