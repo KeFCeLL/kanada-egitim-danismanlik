@@ -2,21 +2,12 @@
 
 import { ReactNode, useState } from 'react';
 import Link from 'next/link';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-
-const inter = Inter({ subsets: ['latin'] });
 
 interface UserLayoutProps {
   children: ReactNode;
 }
-
-export const metadata: Metadata = {
-  title: 'Kanada Kolay Vize',
-  description: 'Kanada vize ve eğitim danışmanlığı',
-};
 
 export default function UserLayout({ children }: UserLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
