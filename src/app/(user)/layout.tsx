@@ -1,8 +1,9 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
 };
 
 export default function UserLayout({ children }: UserLayoutProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="bg-[#8B0000]">
@@ -27,28 +33,132 @@ export default function UserLayout({ children }: UserLayoutProps) {
               </Link>
             </div>
 
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-white hover:text-gray-200">
+              <Link
+                href="/"
+                className={`text-white hover:text-gray-200 ${
+                  isActive('/') ? 'font-bold' : ''
+                }`}
+              >
                 Ana Sayfa
               </Link>
-              <Link href="/about" className="text-white hover:text-gray-200">
+              <Link
+                href="/about"
+                className={`text-white hover:text-gray-200 ${
+                  isActive('/about') ? 'font-bold' : ''
+                }`}
+              >
                 Hakkımızda
               </Link>
-              <Link href="/services" className="text-white hover:text-gray-200">
+              <Link
+                href="/services"
+                className={`text-white hover:text-gray-200 ${
+                  isActive('/services') ? 'font-bold' : ''
+                }`}
+              >
                 Hizmetlerimiz
               </Link>
-              <Link href="/contact" className="text-white hover:text-gray-200">
+              <Link
+                href="/contact"
+                className={`text-white hover:text-gray-200 ${
+                  isActive('/contact') ? 'font-bold' : ''
+                }`}
+              >
                 İletişim
               </Link>
-              <Link href="/login" className="text-white hover:text-gray-200">
+              <Link
+                href="/login"
+                className={`text-white hover:text-gray-200 ${
+                  isActive('/login') ? 'font-bold' : ''
+                }`}
+              >
                 Giriş Yap
               </Link>
-              <Link href="/apply" className="text-white hover:text-gray-200">
+              <Link
+                href="/apply"
+                className="bg-white text-[#8B0000] px-4 py-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
                 Başvur
               </Link>
             </nav>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                type="button"
+                className="text-white hover:text-gray-200 focus:outline-none"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link
+                href="/"
+                className={`block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-[#6B0000] ${
+                  isActive('/') ? 'bg-[#6B0000]' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ana Sayfa
+              </Link>
+              <Link
+                href="/about"
+                className={`block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-[#6B0000] ${
+                  isActive('/about') ? 'bg-[#6B0000]' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Hakkımızda
+              </Link>
+              <Link
+                href="/services"
+                className={`block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-[#6B0000] ${
+                  isActive('/services') ? 'bg-[#6B0000]' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Hizmetlerimiz
+              </Link>
+              <Link
+                href="/contact"
+                className={`block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-[#6B0000] ${
+                  isActive('/contact') ? 'bg-[#6B0000]' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                İletişim
+              </Link>
+              <Link
+                href="/login"
+                className={`block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-[#6B0000] ${
+                  isActive('/login') ? 'bg-[#6B0000]' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Giriş Yap
+              </Link>
+              <Link
+                href="/apply"
+                className="block px-3 py-2 rounded-md text-base font-medium text-[#8B0000] bg-white hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Başvur
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       <main className="flex-grow">
