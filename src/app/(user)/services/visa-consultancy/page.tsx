@@ -79,6 +79,34 @@ export default function VisaConsultancy() {
             </div>
           </div>
           
+          {/* Tourist Visa */}
+          <div className="backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-8 rounded-xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">Turistik Vize</h3>
+              <p className="text-gray-400 mb-4">
+                Kanada'ya turistik amaçlı seyahatler için ziyaretçi vizesi ve eTA başvuruları.
+              </p>
+              <ul className="list-disc list-inside text-gray-400 mb-6 space-y-1">
+                <li>Ziyaretçi vizesi (Visitor Visa)</li>
+                <li>eTA (elektronik seyahat izni)</li>
+                <li>Aile ziyareti vizesi</li>
+                <li>İş seyahati vizesi</li>
+              </ul>
+              <Link href="/apply" className="inline-flex items-center text-blue-400 font-medium">
+                Detaylı Bilgi
+                <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+          
           {/* Immigration */}
           <div className="backdrop-blur-lg bg-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 p-8 rounded-xl relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
