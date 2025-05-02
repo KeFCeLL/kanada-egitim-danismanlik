@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
-import { WhatsappIcon } from 'react-icons/fa';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -102,7 +101,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-center space-x-3">
-                  <WhatsappIcon className="w-6 h-6 text-green-500" />
+                  <FaWhatsapp className="w-6 h-6 text-green-500" />
                   <a href="https://wa.me/905059866107" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
                     +90 505 986 61 07
                   </a>
