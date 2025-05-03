@@ -102,8 +102,8 @@ export default function ContactPage() {
 
                 <div className="flex items-center space-x-3">
                   <FaWhatsapp className="w-6 h-6 text-green-500" />
-                  <a href="https://wa.me/905059866107" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                    +90 505 986 61 07
+                  <a href="https://wa.me/14375996353" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    +1 (437) 599-6353
                   </a>
                 </div>
 
